@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.tr100000.trutils.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "BlockStateBaseMixin",
+    "BuiltInRegistriesMixin",
+    "FabricDataGenHelperAccessor",
+    "HashCacheMixin",
+    "MultiPackResourceManagerMixin",
+    "ReloadableResourceManagerMixin",
+    "ServerLanguageUtilMixin",
+    "ServerPlayerGameModeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

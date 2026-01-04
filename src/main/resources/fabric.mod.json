@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "trutils",
+  "name": "TrUtils",
+  "version": "${version}",
+  "description": "[Insert description here]",
+  "authors": ["Tr100000"],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/trutils",
+    "sources": "https://github.com/Tr100000/TrUtils",
+    "issues": "https://github.com/Tr100000/TrUtils/issues"
+  },
+  "license": "MIT",
+  "icon": "assets/trutils/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["io.github.tr100000.trutils.TrUtils"],
+    "client": ["io.github.tr100000.trutils.TrUtilsClient"]
+  },
+  "mixins": [
+    "trutils.mixins.json",
+    {
+      "config": "trutils.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "accessWidener": "trutils.classtweaker",
+  "depends": {
+    "fabricloader": ">=0.18",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": ">=0.140"
+  },
+  "suggests": {
+    "modmenu": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": ["library"]
+    }
+  }
+}

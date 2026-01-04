@@ -1,0 +1,8 @@
+classTweaker v1 named
+
+transitive-accessible method net/minecraft/client/gui/GuiGraphics setTooltipForNextFrameInternal (Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;Z)V
+extendable class net/minecraft/client/gui/render/state/GuiItemRenderState
+accessible method net/minecraft/world/level/block/state/BlockBehaviour getDestroyProgress (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)F
+accessible method net/minecraft/world/item/AxeItem playerHasBlockingItemUseIntent (Lnet/minecraft/world/item/context/UseOnContext;)Z
+
+inject-interface net/minecraft/server/level/ServerPlayerGameMode io/github/tr100000/trutils/api/item/TrUtilsServerPlayerGameModeExtensions

@@ -1,0 +1,5 @@
+{
+  "pack.source.generated": "generated",
+  "pack.generated.assets": "Generated assets for %s",
+  "pack.generated.data": "Generated data for %s"
+}

@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "id": "trutils-testmod",
+  "name": "TrUtils Test Mod",
+  "version": "1.0.0",
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "main": ["io.github.tr100000.trutils.testmod.TrUtilsTestmod"],
+    "trutils:datagen": ["io.github.tr100000.trutils.testmod.datagen.TrUtilsTestmodDatagen"]
+  },
+  "depends": {
+    "trutils": "*"
+  }
+}
