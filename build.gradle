@@ -62,7 +62,7 @@ loom {
     runs {
         testmod {
             client()
-            name = "Test Mod"
+            name = "Testmod Client"
             source = sourceSets.testmod
             ideConfigGenerated = true
             programArgs "--launch_target", "net.fabricmc.loader.impl.launch.knot.KnotClient"

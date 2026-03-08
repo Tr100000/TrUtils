@@ -53,6 +53,7 @@ public final class TrUtilsCommand {
 
     private static int showCurrentHandItemComponents(CommandContext<CommandSourceStack> context) {
         Player player = context.getSource().getPlayer();
+        assert player != null;
         ItemStack stack = player.getMainHandItem();
         context.getSource().sendSuccess(() -> Component.literal(stack.getComponents().toString()), false);
         return 1;

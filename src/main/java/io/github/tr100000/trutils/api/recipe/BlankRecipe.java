@@ -67,12 +67,12 @@ public final class BlankRecipe implements Recipe<RecipeInput> {
         return RecipeBookCategories.CAMPFIRE;
     }
 
-    @ApiStatus.Internal
     public static class Type implements RecipeType<BlankRecipe>, RecipeSerializer<BlankRecipe> {
         public static final Type INSTANCE = new Type();
         public static final MapCodec<BlankRecipe> CODEC = MapCodec.unit(BlankRecipe.INSTANCE);
         public static final StreamCodec<RegistryFriendlyByteBuf, BlankRecipe> PACKET_CODEC = StreamCodec.unit(BlankRecipe.INSTANCE);
 
+        @ApiStatus.Internal
         public static void register() {
             Identifier id = TrUtils.id("blank");
             Registry.register(BuiltInRegistries.RECIPE_TYPE, id, Type.INSTANCE);
