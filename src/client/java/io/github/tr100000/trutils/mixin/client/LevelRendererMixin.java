@@ -7,7 +7,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.ShapeRenderer;
-import net.minecraft.client.renderer.state.BlockOutlineRenderState;
+import net.minecraft.client.renderer.state.level.BlockOutlineRenderState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
@@ -28,7 +28,7 @@ public abstract class LevelRendererMixin {
     @Shadow @Final private Minecraft minecraft;
 
     @Inject(at = @At("HEAD"), method = "renderHitOutline", cancellable = true)
-    private void drawBlockOutline(PoseStack matrices, VertexConsumer vertexConsumer, double x, double y, double z, BlockOutlineRenderState state, int color, float lineWidth, CallbackInfo ci) {
+    private void drawBlockOutline(PoseStack poseStack, VertexConsumer builder, double camX, double camY, double camZ, BlockOutlineRenderState state, int color, float width, CallbackInfo ci) {
         if (minecraft.player == null || minecraft.level == null) {
             return;
         }
@@ -58,14 +58,14 @@ public abstract class LevelRendererMixin {
                 }
 
                 outlineShapes.forEach(shape -> ShapeRenderer.renderShape(
-                        matrices,
-                        vertexConsumer,
+                        poseStack,
+                        builder,
                         shape,
-                        state.pos().getX() - x,
-                        state.pos().getY() - y,
-                        state.pos().getZ() - z,
+                        state.pos().getX() - camX,
+                        state.pos().getY() - camY,
+                        state.pos().getZ() - camZ,
                         color,
-                        lineWidth
+                        width
                 ));
 
                 ci.cancel();

@@ -2,7 +2,6 @@ package io.github.tr100000.trutils.api.recipe;
 
 import com.mojang.serialization.MapCodec;
 import io.github.tr100000.trutils.TrUtils;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -33,7 +32,7 @@ public final class BlankRecipe implements Recipe<RecipeInput> {
     }
 
     @Override
-    public ItemStack assemble(RecipeInput input, HolderLookup.Provider registries) {
+    public ItemStack assemble(RecipeInput input) {
         return ItemStack.EMPTY;
     }
 
@@ -48,8 +47,13 @@ public final class BlankRecipe implements Recipe<RecipeInput> {
     }
 
     @Override
+    public String group() {
+        return "";
+    }
+
+    @Override
     public RecipeSerializer<? extends Recipe<RecipeInput>> getSerializer() {
-        return Type.INSTANCE;
+        return Type.SERIALIZER;
     }
 
     @Override
@@ -67,28 +71,19 @@ public final class BlankRecipe implements Recipe<RecipeInput> {
         return RecipeBookCategories.CAMPFIRE;
     }
 
-    public static class Type implements RecipeType<BlankRecipe>, RecipeSerializer<BlankRecipe> {
+    public static class Type implements RecipeType<BlankRecipe> {
         public static final Type INSTANCE = new Type();
         public static final MapCodec<BlankRecipe> CODEC = MapCodec.unit(BlankRecipe.INSTANCE);
         public static final StreamCodec<RegistryFriendlyByteBuf, BlankRecipe> PACKET_CODEC = StreamCodec.unit(BlankRecipe.INSTANCE);
+        public static final RecipeSerializer<BlankRecipe> SERIALIZER = new RecipeSerializer<>(CODEC, PACKET_CODEC);
 
         @ApiStatus.Internal
         public static void register() {
             Identifier id = TrUtils.id("blank");
             Registry.register(BuiltInRegistries.RECIPE_TYPE, id, Type.INSTANCE);
-            Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id, Type.INSTANCE);
+            Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, id, SERIALIZER);
         }
 
         private Type() {}
-
-        @Override
-        public MapCodec<BlankRecipe> codec() {
-            return CODEC;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, BlankRecipe> streamCodec() {
-            return PACKET_CODEC;
-        }
     }
 }

@@ -1,7 +1,7 @@
-classTweaker v1 named
+classTweaker v1 official
 
-transitive-accessible method net/minecraft/client/gui/GuiGraphics setTooltipForNextFrameInternal (Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;Z)V
-extendable class net/minecraft/client/gui/render/state/GuiItemRenderState
+transitive-accessible method net/minecraft/client/gui/GuiGraphicsExtractor setTooltipForNextFrameInternal (Lnet/minecraft/client/gui/Font;Ljava/util/List;IILnet/minecraft/client/gui/screens/inventory/tooltip/ClientTooltipPositioner;Lnet/minecraft/resources/Identifier;Z)V
+extendable class net/minecraft/client/renderer/state/gui/GuiItemRenderState
 accessible method net/minecraft/world/level/block/state/BlockBehaviour getDestroyProgress (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)F
 accessible method net/minecraft/world/item/AxeItem playerHasBlockingItemUseIntent (Lnet/minecraft/world/item/context/UseOnContext;)Z
 

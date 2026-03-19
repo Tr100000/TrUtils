@@ -3,7 +3,7 @@ package io.github.tr100000.trutils.api.datagen;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.minecraft.core.Registry;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
@@ -17,15 +17,15 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public abstract class BlankDataProvider implements DataProvider {
-    protected final FabricDataOutput output;
+    protected final FabricPackOutput output;
     protected final PackOutput.PathProvider pathResolver;
 
-    protected BlankDataProvider(FabricDataOutput output, PackOutput.Target type, String directoryName) {
+    protected BlankDataProvider(FabricPackOutput output, PackOutput.Target type, String directoryName) {
         this.output = output;
         this.pathResolver = output.createPathProvider(type, directoryName);
     }
 
-    protected BlankDataProvider(FabricDataOutput output, ResourceKey<? extends Registry<?>> registryKey) {
+    protected BlankDataProvider(FabricPackOutput output, ResourceKey<? extends Registry<?>> registryKey) {
         this.output = output;
         this.pathResolver = output.createRegistryElementsPathProvider(registryKey);
     }

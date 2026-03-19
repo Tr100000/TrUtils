@@ -1,7 +1,7 @@
 package io.github.tr100000.trutils.api.gui;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -15,8 +15,8 @@ public abstract class AbstractView extends AbstractContainerEventHandler impleme
     private final List<Renderable> drawables = new ObjectArrayList<>();
 
     @Override
-    public void render(GuiGraphics draw, int mouseX, int mouseY, float delta) {
-        drawables.forEach(drawable -> drawable.render(draw, mouseX, mouseY, delta));
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+        drawables.forEach(drawable -> drawable.extractRenderState(graphics, mouseX, mouseY, delta));
     }
 
     public void clearChildren() {

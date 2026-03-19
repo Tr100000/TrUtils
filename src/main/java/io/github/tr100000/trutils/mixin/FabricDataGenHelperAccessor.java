@@ -8,10 +8,11 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 import java.util.List;
 
+@SuppressWarnings("UnstableApiUsage")
 @Mixin(value = FabricDataGenHelper.class, remap = false)
 public interface FabricDataGenHelperAccessor {
-    @Invoker("createRegistryWrapper")
-    static HolderLookup.Provider invokeCreateRegistryWrapper(List<DataGeneratorEntrypoint> dataGeneratorEntrypoints) {
+    @Invoker("createHolderLookupProvider")
+    static HolderLookup.Provider invokeCreateHolderLookupProvider(List<DataGeneratorEntrypoint> dataGeneratorEntrypoints) {
         throw new AssertionError();
     }
 }

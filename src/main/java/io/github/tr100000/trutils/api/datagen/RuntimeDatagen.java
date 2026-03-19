@@ -55,7 +55,7 @@ public final class RuntimeDatagen {
         try {
             Utils.deleteFolder(outputPath);
             ModContainer mod = FabricLoader.getInstance().getModContainer(modid).orElseThrow();
-            CompletableFuture<HolderLookup.Provider> registriesFuture = CompletableFuture.supplyAsync(() -> FabricDataGenHelperAccessor.invokeCreateRegistryWrapper(List.of(entrypoint)), Util.backgroundExecutor());
+            CompletableFuture<HolderLookup.Provider> registriesFuture = CompletableFuture.supplyAsync(() -> FabricDataGenHelperAccessor.invokeCreateHolderLookupProvider(List.of(entrypoint)), Util.backgroundExecutor());
             FabricDataGenerator generator = new FabricDataGenerator(outputPath, mod, entrypoint.strictValidation(), registriesFuture);
             entrypoint.onInitializeDataGenerator(generator);
             generator.run();

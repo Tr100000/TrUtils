@@ -5,7 +5,7 @@ import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.layouts.LayoutElement;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -52,27 +52,27 @@ public final class GuiHelper {
         return Mth.floor(client.mouseHandler.ypos() * client.getWindow().getGuiScaledHeight() / client.getWindow().getScreenHeight());
     }
 
-    public static void drawSlotHighlight(GuiGraphics draw, int x, int y, int width, int height) {
-        draw.fill(x, y, x + width, y + height, -2130706433);
+    public static void slotHighlight(GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
+        graphics.fill(x, y, x + width, y + height, -2130706433);
     }
 
-    public static void drawSlotHighlight(GuiGraphics draw, LayoutElement widget) {
-        drawSlotHighlight(draw, widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight());
+    public static void slotHighlight(GuiGraphicsExtractor graphics, LayoutElement widget) {
+        slotHighlight(graphics, widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight());
     }
 
-    public static void drawItemStack(GuiGraphics draw, Font textRenderer, ItemStack stack, int x, int y) {
-        draw.renderFakeItem(stack, x, y);
-        draw.renderItemDecorations(textRenderer, stack, x, y);
+    public static void itemStack(GuiGraphicsExtractor graphics, Font textRenderer, ItemStack stack, int x, int y) {
+        graphics.fakeItem(stack, x, y);
+        graphics.itemDecorations(textRenderer, stack, x, y);
     }
 
-    public static void drawItemWithoutEntityAndTooltip(GuiGraphics draw, ItemStack stack, int x, int y, int mouseX, int mouseY) {
-        drawItemWithoutEntityAndTooltip(draw, stack, x, y, mouseX, mouseY, getItemTooltip(stack));
+    public static void fakeItem(GuiGraphicsExtractor graphics, ItemStack stack, int x, int y, int mouseX, int mouseY) {
+        fakeItem(graphics, stack, x, y, mouseX, mouseY, getItemTooltip(stack));
     }
 
-    public static void drawItemWithoutEntityAndTooltip(GuiGraphics draw, ItemStack stack, int x, int y, int mouseX, int mouseY, List<Component> text) {
-        draw.renderFakeItem(stack, x, y);
+    public static void fakeItem(GuiGraphicsExtractor graphics, ItemStack stack, int x, int y, int mouseX, int mouseY, List<Component> text) {
+        graphics.fakeItem(stack, x, y);
         if (!text.isEmpty() && GuiHelper.isMouseTouching(x, y, 16, 16, mouseX, mouseY)) {
-            draw.setComponentTooltipForNextFrame(Minecraft.getInstance().font, text, mouseX, mouseY);
+            graphics.setComponentTooltipForNextFrame(Minecraft.getInstance().font, text, mouseX, mouseY);
         }
     }
 
@@ -81,15 +81,15 @@ public final class GuiHelper {
     }
 
     // A version of the vanilla implementation that changes the size
-    public static void drawScaledItemWithoutEntity(GuiGraphics draw, ItemStack stack, int x, int y, int size) {
+    public static void fakeItemScaled(GuiGraphicsExtractor graphics, ItemStack stack, int x, int y, int size) {
         if (!stack.isEmpty()) {
             TrackingItemStackRenderState keyedItemRenderState = new TrackingItemStackRenderState();
             client.getItemModelResolver().updateForTopItem(keyedItemRenderState, stack, ItemDisplayContext.GUI, null, null, 0);
 
             try {
-                draw.guiRenderState.submitItem(
+                graphics.guiRenderState.addItem(
                         new ScaledItemGuiElementRenderState(
-                                stack.getItem().getName().toString(), new Matrix3x2f(draw.pose()), keyedItemRenderState, x, y, size, draw.scissorStack.peek()
+                                new Matrix3x2f(graphics.pose()), keyedItemRenderState, x, y, size, graphics.scissorStack.peek()
                         )
                 );
             } catch (Exception e) {
@@ -103,8 +103,8 @@ public final class GuiHelper {
         }
     }
 
-    public static void drawTooltip(GuiGraphics draw, Font textRenderer, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner tooltipPositioner) {
-        draw.setTooltipForNextFrameInternal(textRenderer, components, x, y, tooltipPositioner, null, false);
+    public static void tooltip(GuiGraphicsExtractor graphics, Font textRenderer, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner tooltipPositioner) {
+        graphics.setTooltipForNextFrameInternal(textRenderer, components, x, y, tooltipPositioner, null, false);
     }
 
     public static boolean isKeyboard() {

@@ -27,9 +27,9 @@
   "accessWidener": "trutils.classtweaker",
   "depends": {
     "fabricloader": ">=0.18",
-    "minecraft": "~1.21.11",
-    "java": ">=21",
-    "fabric-api": ">=0.140"
+    "minecraft": ">=26.1-pre.1",
+    "java": ">=25",
+    "fabric-api": ">=0.143"
   },
   "suggests": {
     "modmenu": "*"

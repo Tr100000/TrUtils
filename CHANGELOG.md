@@ -1,2 +1,1 @@
-### Changed
-- Changed how `CodecUtils#ofMap` works to make Codec2Schema support possible
+**Updated to 26.1-pre-1**

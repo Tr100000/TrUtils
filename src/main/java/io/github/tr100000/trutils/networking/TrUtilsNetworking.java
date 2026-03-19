@@ -6,6 +6,6 @@ public final class TrUtilsNetworking {
     private TrUtilsNetworking() {}
 
     public static void registerPayloads() {
-        PayloadTypeRegistry.playS2C().register(GuiComponentSyncS2CPacket.ID, GuiComponentSyncS2CPacket.CODEC);
+        PayloadTypeRegistry.clientboundPlay().register(GuiComponentSyncS2CPacket.ID, GuiComponentSyncS2CPacket.CODEC);
     }
 }

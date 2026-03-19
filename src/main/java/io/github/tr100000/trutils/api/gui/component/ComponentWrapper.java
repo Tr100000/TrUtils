@@ -1,7 +1,7 @@
 package io.github.tr100000.trutils.api.gui.component;
 
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.FriendlyByteBufs;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.Container;
@@ -30,7 +30,7 @@ public interface ComponentWrapper<T extends GuiComponentServer<?>> {
     }
 
     default RegistryFriendlyByteBuf getScreenOpeningBuf() {
-        RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(PacketByteBufs.create(), getLevel().registryAccess());
+        RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(FriendlyByteBufs.create(), getLevel().registryAccess());
         buf.writeVarInt(getGuiComponents().size());
         getGuiComponents().forEach(component -> {
             buf.writeIdentifier(component.getId());

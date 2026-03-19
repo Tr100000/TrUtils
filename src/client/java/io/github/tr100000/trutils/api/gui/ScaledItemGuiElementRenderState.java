@@ -1,8 +1,8 @@
 package io.github.tr100000.trutils.api.gui;
 
 import net.minecraft.client.gui.navigation.ScreenRectangle;
-import net.minecraft.client.gui.render.state.GuiItemRenderState;
 import net.minecraft.client.renderer.item.TrackingItemStackRenderState;
+import net.minecraft.client.renderer.state.gui.GuiItemRenderState;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
 import org.joml.Matrix3x2f;
@@ -18,8 +18,8 @@ public class ScaledItemGuiElementRenderState extends GuiItemRenderState {
     @Nullable private final ScreenRectangle oversizedBounds;
     @Nullable private final ScreenRectangle bounds;
 
-    public ScaledItemGuiElementRenderState(String name, Matrix3x2f pose, TrackingItemStackRenderState state, int x, int y, int size, @Nullable ScreenRectangle scissor) {
-        super(name, pose, state, x, y, scissor);
+    public ScaledItemGuiElementRenderState(Matrix3x2f pose, TrackingItemStackRenderState state, int x, int y, int size, @Nullable ScreenRectangle scissor) {
+        super(pose, state, x, y, scissor);
         final float scale = size / 16.0F;
         this.pose = pose.scaleAround(scale, x, y);
         this.state = state;

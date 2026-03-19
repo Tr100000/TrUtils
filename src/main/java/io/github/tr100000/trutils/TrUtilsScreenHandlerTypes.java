@@ -2,7 +2,7 @@ package io.github.tr100000.trutils;
 
 import io.github.tr100000.trutils.api.gui.component.AbstractComponentScreenHandler;
 import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
+import net.fabricmc.fabric.api.menu.v1.ExtendedMenuType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Inventory;
 public final class TrUtilsScreenHandlerTypes {
     private TrUtilsScreenHandlerTypes() {}
 
-    public static final ExtendedScreenHandlerType<AbstractComponentScreenHandler<?>, AbstractComponentScreenHandler.Payload> COMPONENT = new ExtendedScreenHandlerType<>(TrUtilsScreenHandlerTypes::createScreenHandler, AbstractComponentScreenHandler.Payload.CODEC);
+    public static final ExtendedMenuType<AbstractComponentScreenHandler<?>, AbstractComponentScreenHandler.Payload> COMPONENT = new ExtendedMenuType<>(TrUtilsScreenHandlerTypes::createScreenHandler, AbstractComponentScreenHandler.Payload.CODEC);
 
     public static void register() {
         Registry.register(BuiltInRegistries.MENU, TrUtils.id("component"), COMPONENT);

@@ -3,7 +3,7 @@ package io.github.tr100000.trutils.api.gui.component;
 import io.github.tr100000.trutils.TrUtilsScreenHandlerTypes;
 import io.github.tr100000.trutils.networking.GuiComponentSyncS2CPacket;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
+import net.fabricmc.fabric.api.networking.v1.FriendlyByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -39,7 +39,7 @@ public class ServerComponentScreenHandler<T extends GuiComponentServer<?>, W ext
         for (int i = 0; i < wrapper.getGuiComponents().size(); i++) {
             GuiComponentServer component = wrapper.getGuiComponents().get(i);
             if (component.needsSync(componentDataCache.get(i))) {
-                RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(PacketByteBufs.create(), wrapper.getLevel().registryAccess());
+                RegistryFriendlyByteBuf buf = new RegistryFriendlyByteBuf(FriendlyByteBufs.create(), wrapper.getLevel().registryAccess());
                 component.writePacket(buf);
                 ServerPlayNetworking.send((ServerPlayer) playerInventory.player, new GuiComponentSyncS2CPacket(containerId, i, buf.array()));
                 componentDataCache.set(i, component.copyData());

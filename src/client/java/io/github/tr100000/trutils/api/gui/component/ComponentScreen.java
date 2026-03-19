@@ -1,6 +1,6 @@
 package io.github.tr100000.trutils.api.gui.component;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
@@ -32,20 +32,19 @@ public class ComponentScreen<T extends GuiComponentClient<?>, H extends ClientCo
     }
 
     @Override
-    public void render(GuiGraphics draw, int mouseX, int mouseY, float delta) {
-        renderBg(draw, delta, mouseX, mouseY);
-        super.render(draw, mouseX, mouseY, delta);
-        drawTooltips(draw, mouseX, mouseY, delta);
-        renderTooltip(draw, mouseX, mouseY);
+    public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+        extractBackground(graphics, mouseX, mouseY, delta);
+        super.extractRenderState(graphics, mouseX, mouseY, delta);
+        extractTooltips(graphics, mouseX, mouseY, delta);
     }
 
     @Override
-    protected void renderBg(GuiGraphics draw, float delta, int mouseX, int mouseY) {
-        menu.components.forEach(component -> castComponent(component).drawScreen(this, draw, leftPos, topPos, delta, mouseX, mouseY));
+    public void extractBackground(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+        menu.components.forEach(component -> castComponent(component).extractScreenEarly(this, graphics, leftPos, topPos, delta, mouseX, mouseY));
     }
 
-    protected void drawTooltips(GuiGraphics draw, int mouseX, int mouseY, float delta) {
-        menu.components.forEach(component -> castComponent(component).postDrawScreen(this, draw, leftPos, topPos, delta, mouseX, mouseY));
+    protected void extractTooltips(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+        menu.components.forEach(component -> castComponent(component).extractScreen(this, graphics, leftPos, topPos, delta, mouseX, mouseY));
     }
 
     @Override
