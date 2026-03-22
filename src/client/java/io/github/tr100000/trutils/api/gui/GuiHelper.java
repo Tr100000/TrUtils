@@ -52,24 +52,24 @@ public final class GuiHelper {
         return Mth.floor(client.mouseHandler.ypos() * client.getWindow().getGuiScaledHeight() / client.getWindow().getScreenHeight());
     }
 
-    public static void slotHighlight(GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
+    public static void slotHighlight(final GuiGraphicsExtractor graphics, int x, int y, int width, int height) {
         graphics.fill(x, y, x + width, y + height, -2130706433);
     }
 
-    public static void slotHighlight(GuiGraphicsExtractor graphics, LayoutElement widget) {
+    public static void slotHighlight(final GuiGraphicsExtractor graphics, LayoutElement widget) {
         slotHighlight(graphics, widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight());
     }
 
-    public static void itemStack(GuiGraphicsExtractor graphics, Font textRenderer, ItemStack stack, int x, int y) {
+    public static void itemStack(final GuiGraphicsExtractor graphics, Font textRenderer, ItemStack stack, int x, int y) {
         graphics.fakeItem(stack, x, y);
         graphics.itemDecorations(textRenderer, stack, x, y);
     }
 
-    public static void fakeItem(GuiGraphicsExtractor graphics, ItemStack stack, int x, int y, int mouseX, int mouseY) {
+    public static void fakeItem(final GuiGraphicsExtractor graphics, ItemStack stack, int x, int y, int mouseX, int mouseY) {
         fakeItem(graphics, stack, x, y, mouseX, mouseY, getItemTooltip(stack));
     }
 
-    public static void fakeItem(GuiGraphicsExtractor graphics, ItemStack stack, int x, int y, int mouseX, int mouseY, List<Component> text) {
+    public static void fakeItem(final GuiGraphicsExtractor graphics, ItemStack stack, int x, int y, int mouseX, int mouseY, List<Component> text) {
         graphics.fakeItem(stack, x, y);
         if (!text.isEmpty() && GuiHelper.isMouseTouching(x, y, 16, 16, mouseX, mouseY)) {
             graphics.setComponentTooltipForNextFrame(Minecraft.getInstance().font, text, mouseX, mouseY);
@@ -81,7 +81,7 @@ public final class GuiHelper {
     }
 
     // A version of the vanilla implementation that changes the size
-    public static void fakeItemScaled(GuiGraphicsExtractor graphics, ItemStack stack, int x, int y, int size) {
+    public static void fakeItemScaled(final GuiGraphicsExtractor graphics, ItemStack stack, int x, int y, int size) {
         if (!stack.isEmpty()) {
             TrackingItemStackRenderState keyedItemRenderState = new TrackingItemStackRenderState();
             client.getItemModelResolver().updateForTopItem(keyedItemRenderState, stack, ItemDisplayContext.GUI, null, null, 0);
@@ -103,7 +103,7 @@ public final class GuiHelper {
         }
     }
 
-    public static void tooltip(GuiGraphicsExtractor graphics, Font textRenderer, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner tooltipPositioner) {
+    public static void tooltip(final GuiGraphicsExtractor graphics, Font textRenderer, List<ClientTooltipComponent> components, int x, int y, ClientTooltipPositioner tooltipPositioner) {
         graphics.setTooltipForNextFrameInternal(textRenderer, components, x, y, tooltipPositioner, null, false);
     }
 

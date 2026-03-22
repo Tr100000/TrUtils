@@ -129,6 +129,9 @@ modrinth {
     additionalFiles = [sourcesJar]
     changelog = rootProject.file("CHANGELOG.md").text
     syncBodyFrom = rootProject.file("README.md").text
+    dependencies {
+        required.project "fabric-api"
+    }
 }
 
 publishing {

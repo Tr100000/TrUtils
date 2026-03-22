@@ -12,12 +12,12 @@ public final class ItemIconRenderer implements IconRenderer<ItemIcon> {
     @Override
     @Environment(EnvType.CLIENT)
     public void draw(ItemIcon icon, GuiGraphicsExtractor graphics, int x, int y) {
-        graphics.fakeItem(icon.stack(), x, y);
+        graphics.fakeItem(icon.template().create(), x, y);
     }
 
     @Override
     @Environment(EnvType.CLIENT)
     public void drawWithSize(ItemIcon icon, GuiGraphicsExtractor graphics, int x, int y, int size) {
-        GuiHelper.fakeItemScaled(graphics, icon.stack(), x, y, size);
+        GuiHelper.fakeItemScaled(graphics, icon.template().create(), x, y, size);
     }
 }

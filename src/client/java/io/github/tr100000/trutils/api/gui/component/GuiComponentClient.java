@@ -11,8 +11,8 @@ public interface GuiComponentClient<T extends ComponentScreen<?, ?>> extends Gui
     void readPacket(Level world, FriendlyByteBuf buf);
 
     default void initScreen(T screen, int x, int y) {}
-    default void extractScreenEarly(T screen, GuiGraphicsExtractor graphics, int x, int y, float delta, int mouseX, int mouseY) {}
-    default void extractScreen(T screen, GuiGraphicsExtractor graphics, int x, int y, float delta, int mouseX, int mouseY) {}
+    default void extractScreenEarly(T screen, final GuiGraphicsExtractor graphics, int x, int y, float delta, int mouseX, int mouseY) {}
+    default void extractScreen(T screen, final GuiGraphicsExtractor graphics, int x, int y, float delta, int mouseX, int mouseY) {}
 
     @FunctionalInterface
     interface Factory<T extends GuiComponentClient<?>> {
