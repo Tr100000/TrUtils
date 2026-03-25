@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public abstract class BlockStateBaseMixin {
     @Inject(method = "getDestroyProgress", at = @At("HEAD"), cancellable = true)
-    private void calcBlockBreakingDelta(Player player, BlockGetter world, BlockPos pos, CallbackInfoReturnable<Float> cir) {
+    private void getDestroyProgress(Player player, BlockGetter world, BlockPos pos, CallbackInfoReturnable<Float> cir) {
         ItemStack stack = player.getMainHandItem();
         if (stack.getItem() instanceof WideAreaTool tool && !player.isShiftKeyDown()) {
             cir.setReturnValue(tool.findBlocksToBreak(world, player, tool.getBreakRadius(stack), tool.getDepth(stack)).stream()

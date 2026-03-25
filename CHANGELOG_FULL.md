@@ -1,5 +1,9 @@
 # Changelog
 
+## [0.2.0-beta.1+26.1]
+
+**Updated to 26.1**
+
 ## [0.1.1+1.21.11]
 
 ### Changed

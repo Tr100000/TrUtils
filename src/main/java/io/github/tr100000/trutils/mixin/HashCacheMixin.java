@@ -27,7 +27,7 @@ public abstract class HashCacheMixin {
     }
 
     @Inject(method = "applyUpdate", at = @At("HEAD"), cancellable = true)
-    private void dontStore(HashCache.UpdateResult runResult, CallbackInfo ci) {
+    private void dontUpdate(HashCache.UpdateResult runResult, CallbackInfo ci) {
         if (isRuntimeDatagen()) {
             ci.cancel();
         }
@@ -41,6 +41,7 @@ public abstract class HashCacheMixin {
     }
 
     @Unique
+    @SuppressWarnings("UnstableApiUsage")
     private boolean isRuntimeDatagen() {
         return !FabricDataGenHelper.ENABLED;
     }

@@ -16,7 +16,8 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Set;
 
-@Mixin(value = ServerLanguageUtil.class, remap = false)
+@SuppressWarnings("UnstableApiUsage")
+@Mixin(ServerLanguageUtil.class)
 public abstract class ServerLanguageUtilMixin {
     @Inject(method = "getModLanguageFiles", at = @At(value = "INVOKE", target = "Ljava/util/Collections;unmodifiableCollection(Ljava/util/Collection;)Ljava/util/Collection;"))
     private static void injectGenerated(CallbackInfoReturnable<Collection<Path>> cir, @Local(name = "paths") Set<Path> paths) {

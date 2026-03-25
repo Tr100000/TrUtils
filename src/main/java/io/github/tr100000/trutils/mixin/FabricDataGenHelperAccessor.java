@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-@Mixin(value = FabricDataGenHelper.class, remap = false)
+@Mixin(FabricDataGenHelper.class)
 public interface FabricDataGenHelperAccessor {
     @Invoker("createHolderLookupProvider")
     static HolderLookup.Provider invokeCreateHolderLookupProvider(List<DataGeneratorEntrypoint> dataGeneratorEntrypoints) {

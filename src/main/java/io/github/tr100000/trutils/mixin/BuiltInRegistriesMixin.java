@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BuiltInRegistries.class)
 public abstract class BuiltInRegistriesMixin {
     @Inject(method = "bootStrap", at = @At("TAIL"))
-    private static void bootstrap(CallbackInfo ci) {
+    private static void afterBootStrap(CallbackInfo ci) {
         RuntimeDatagen.runAll();
     }
 }

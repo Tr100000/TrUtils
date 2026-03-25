@@ -27,7 +27,7 @@
   "accessWidener": "trutils.classtweaker",
   "depends": {
     "fabricloader": ">=0.18",
-    "minecraft": "~26.1-",
+    "minecraft": "~26.1",
     "java": ">=25",
     "fabric-api": ">=0.144"
   },
