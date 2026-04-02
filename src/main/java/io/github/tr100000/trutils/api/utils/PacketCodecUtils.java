@@ -5,6 +5,7 @@ import com.mojang.datafixers.util.Function7;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import org.jetbrains.annotations.Contract;
 
 import java.util.function.Function;
 
@@ -12,14 +13,17 @@ public final class PacketCodecUtils {
     private PacketCodecUtils() {}
 
     @SuppressWarnings("unchecked")
+    @Contract(pure = true)
     public static <B extends ByteBuf, K, V> StreamCodec<B, V> ofMap(BiMap<K, V> map, StreamCodec<? super B, K> keyCodec) {
         return (StreamCodec<B, V>)keyCodec.map(map::get, map.inverse()::get);
     }
 
+    @Contract(pure = true)
     public static <B extends FriendlyByteBuf, T extends Enum<T>> StreamCodec<B,T> ofEnum(Class<T> enumClass) {
         return StreamCodec.of(FriendlyByteBuf::writeEnum, buf -> buf.readEnum(enumClass));
     }
 
+    @Contract(pure = true)
     public static <B, C, T1, T2, T3, T4, T5, T6, T7> StreamCodec<B, C> bigTuple(
             StreamCodec<? super B, T1> codec1,
             Function<C, T1> from1,

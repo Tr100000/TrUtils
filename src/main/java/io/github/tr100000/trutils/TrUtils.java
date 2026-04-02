@@ -11,6 +11,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,15 +34,17 @@ public class TrUtils implements ModInitializer {
 
         CommandRegistrationCallback.EVENT.register(ModCommands::register);
         ServerLifecycleEvents.SERVER_STARTED.register(startedServer -> server = startedServer);
-        ServerLifecycleEvents.SERVER_STOPPED.register(stoppedServer -> server = null);
+        ServerLifecycleEvents.SERVER_STOPPED.register(_ -> server = null);
 
         TrUtilsNetworking.registerPayloads();
     }
 
+    @Contract(pure = true)
     public static @Nullable MinecraftServer getCurrentServer() {
         return server;
     }
 
+    @Contract("_ -> new")
     public static Identifier id(String path) {
         return Identifier.fromNamespaceAndPath(MODID, path);
     }

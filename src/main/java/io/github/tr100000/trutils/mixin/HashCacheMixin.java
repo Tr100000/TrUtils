@@ -27,7 +27,7 @@ public abstract class HashCacheMixin {
     }
 
     @Inject(method = "applyUpdate", at = @At("HEAD"), cancellable = true)
-    private void dontUpdate(HashCache.UpdateResult runResult, CallbackInfo ci) {
+    private void dontUpdate(HashCache.UpdateResult result, CallbackInfo ci) {
         if (isRuntimeDatagen()) {
             ci.cancel();
         }

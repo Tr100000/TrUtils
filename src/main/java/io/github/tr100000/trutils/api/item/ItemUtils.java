@@ -15,6 +15,7 @@ import net.minecraft.world.item.ItemUseAnimation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.Consumable;
 import org.jspecify.annotations.Nullable;
 
 public final class ItemUtils {
@@ -41,8 +42,8 @@ public final class ItemUtils {
     }
 
     public static boolean itemHasUseAction(Item item, ItemUseAnimation action) {
-        return item.components().has(DataComponents.CONSUMABLE)
-                && item.components().get(DataComponents.CONSUMABLE).animation() == action;
+        Consumable consumable = item.components().get(DataComponents.CONSUMABLE);
+        return consumable != null && consumable.animation() == action;
     }
 
     public static boolean isEdibleItem(Item item) {

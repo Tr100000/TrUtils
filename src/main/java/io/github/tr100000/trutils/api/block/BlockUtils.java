@@ -13,7 +13,7 @@ import java.util.function.Function;
 public final class BlockUtils {
     private BlockUtils() {}
 
-    public static void scatterInventoryIfBlockDestroyed(BlockState state, Level world, BlockPos pos, BlockState newState, Function<BlockEntity, @Nullable Container> inventoryGetter) {
+    public static void dropContentsIfInventoryDestroyed(BlockState state, Level world, BlockPos pos, BlockState newState, Function<BlockEntity, @Nullable Container> inventoryGetter) {
         if (!state.is(newState.getBlock())) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             assert blockEntity != null;

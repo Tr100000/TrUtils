@@ -1,6 +1,7 @@
 package io.github.tr100000.trutils.api.utils;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class Hopefully<T> {
     /**
      * Creates a new empty {@link Hopefully<T>}.
      */
+    @Contract("-> new")
     public static <T> Hopefully<T> empty() {
         return new Hopefully<>();
     }
@@ -28,7 +30,8 @@ public class Hopefully<T> {
     /**
      * Creates a new {@link Hopefully<T>} with the given value.
      */
-    public static <T> Hopefully<T> ofValue(T value) {
+    @Contract("_ -> new")
+    public static <T> Hopefully<T> ofValue(@Nullable T value) {
         return new Hopefully<>(value);
     }
 
@@ -71,7 +74,7 @@ public class Hopefully<T> {
      * @see #then(Function)
      */
     public void whenReady(Consumer<T> consumer) {
-        Objects.requireNonNull(consumer, "consumer must not be null");
+        Objects.requireNonNull(consumer, "consumer is null");
         if (value == null) {
             consumers.add(consumer);
         }
@@ -88,7 +91,7 @@ public class Hopefully<T> {
      * @see #whenReady(Consumer)
      */
     public <U> Hopefully<U> then(Function<T, U> function) {
-        Objects.requireNonNull(function, "function must not be null");
+        Objects.requireNonNull(function, "function is null");
         Hopefully<U> hopefully = empty();
         whenReady(v -> hopefully.fulfill(function.apply(v)));
         return hopefully;
@@ -101,7 +104,7 @@ public class Hopefully<T> {
      * @throws IllegalStateException if the {@link Hopefully<T>} has already been fulfilled
      */
     public void fulfill(T value) {
-        Objects.requireNonNull(value, "value must not be null");
+        Objects.requireNonNull(value, "value is null");
         if (this.value != null) {
             throw new IllegalStateException("This Hopefully already has a value!");
         }

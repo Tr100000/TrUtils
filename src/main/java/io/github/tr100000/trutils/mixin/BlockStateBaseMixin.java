@@ -15,14 +15,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BlockBehaviour.BlockStateBase.class)
 public abstract class BlockStateBaseMixin {
     @Inject(method = "getDestroyProgress", at = @At("HEAD"), cancellable = true)
-    private void getDestroyProgress(Player player, BlockGetter world, BlockPos pos, CallbackInfoReturnable<Float> cir) {
+    private void getDestroyProgress(Player player, BlockGetter level, BlockPos pos, CallbackInfoReturnable<Float> cir) {
         ItemStack stack = player.getMainHandItem();
         if (stack.getItem() instanceof WideAreaTool tool && !player.isShiftKeyDown()) {
-            cir.setReturnValue(tool.findBlocksToBreak(world, player, tool.getBreakRadius(stack), tool.getDepth(stack)).stream()
+            cir.setReturnValue(tool.findBlocksToBreak(level, player, tool.getBreakRadius(stack), tool.getDepth(stack)).stream()
                     .<Float>mapMulti((pos2, consumer) -> {
-                        BlockState state = world.getBlockState(pos2);
-                        if (tool.isBlockValidForBreaking(world, pos, stack)) {
-                            consumer.accept(state.getBlock().getDestroyProgress(state, player, world, pos2) * tool.miningSpeedMultiplier(stack));
+                        BlockState state = level.getBlockState(pos2);
+                        if (tool.isBlockValidForBreaking(level, pos, stack)) {
+                            consumer.accept(state.getBlock().getDestroyProgress(state, player, level, pos2) * tool.miningSpeedMultiplier(stack));
                         }
                     })
                     .min(Float::compare).orElse(0.0F));

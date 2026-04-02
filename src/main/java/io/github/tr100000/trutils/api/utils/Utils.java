@@ -1,6 +1,7 @@
 package io.github.tr100000.trutils.api.utils;
 
 import org.apache.commons.lang3.text.WordUtils;
+import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.Nullable;
 
 import java.io.IOException;
@@ -17,11 +18,12 @@ public final class Utils {
     private Utils() {}
 
     /**
-     * This method should explain itself.
+     * Returns whether the string is null or blank.
      * @param str the string to check
      * @return {@code true} if the string is null or blank, {@code false} otherwise
      * @see String#isBlank()
      */
+    @Contract("null -> true; !null -> false")
     public static boolean stringIsNullOrBlank(@Nullable String str) {
         return str == null || str.isBlank();
     }
@@ -35,7 +37,8 @@ public final class Utils {
      * @param <E> the type of values in the map
      * @throws NullPointerException if the map is null
      */
-    public static <T, E> @Nullable T getKeyByValue(Map<T, E> map, E value) {
+    @Contract(pure = true)
+    public static <T, E> @Nullable T getKeyByValue(Map<T, E> map, @Nullable E value) {
         Objects.requireNonNull(map, "map must not be null");
         for (Map.Entry<T, E> entry : map.entrySet()) {
             if (Objects.equals(value, entry.getValue())) {
@@ -51,6 +54,7 @@ public final class Utils {
      * @param baseUnit the base unit (meters, grams, joules, etc.)
      * @return the formatted string
      */
+    @Contract(pure = true)
     public static String formatUnits(long value, String baseUnit) {
         int exp = value > 0 ? (int)Math.log10(value) / 3 : 0;
         double doubleValue = value / Math.pow(1000, exp);
@@ -64,6 +68,7 @@ public final class Utils {
      * @param baseUnit the base unit (meters, grams, joules, etc.)
      * @return the formatted string
      */
+    @Contract(pure = true)
     public static String formatUnits(double doubleValue, int exponent, String baseUnit) {
         if (exponent > 0) {
             char prefix = "kMGTPEZY".charAt(exponent - 1);
@@ -97,7 +102,8 @@ public final class Utils {
      * Calls {@link WordUtils#capitalizeFully}
      */
     @SuppressWarnings("deprecation")
-    public static String capitalizeFully(String str) {
+    @Contract("null -> null; !null -> !null")
+    public static @Nullable String capitalizeFully(@Nullable String str) {
         return WordUtils.capitalizeFully(str);
     }
 }

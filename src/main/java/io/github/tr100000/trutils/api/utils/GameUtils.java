@@ -8,6 +8,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
+import org.jetbrains.annotations.Contract;
 
 /**
  * Utilities specific to Minecraft.
@@ -44,6 +45,7 @@ public final class GameUtils {
      * Returns an {@link Identifier} with the fabric namespace and the specified path.
      * @see #commonId(String)
      */
+    @Contract("_ -> new")
     public static Identifier fabricId(String path) {
         return Identifier.fromNamespaceAndPath(TagUtil.FABRIC_TAG_NAMESPACE, path);
     }
@@ -52,6 +54,7 @@ public final class GameUtils {
      * Returns an {@link Identifier} with the common namespace and the specified path
      * @see #fabricId(String)
      */
+    @Contract("_ -> new")
     public static Identifier commonId(String path) {
         return Identifier.fromNamespaceAndPath(TagUtil.C_TAG_NAMESPACE, path);
     }
@@ -62,6 +65,7 @@ public final class GameUtils {
      * @param id the {@link Identifier} for the item tab
      * @return a {@link ResourceKey} for the newly registered tab
      */
+    @Contract("_, _ -> new")
     public static ResourceKey<CreativeModeTab> registerItemGroup(CreativeModeTab tab, Identifier id) {
         ResourceKey<CreativeModeTab> key = ResourceKey.create(Registries.CREATIVE_MODE_TAB, id);
         Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, key, tab);

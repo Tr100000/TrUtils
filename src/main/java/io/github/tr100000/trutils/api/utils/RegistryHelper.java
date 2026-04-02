@@ -21,8 +21,8 @@ public class RegistryHelper<T> implements Map<T, Identifier> {
     protected boolean frozen;
 
     public RegistryHelper(BiConsumer<Identifier, T> registerAction, String modid) {
-        Objects.requireNonNull(registerAction, "registerAction must not be null");
-        Objects.requireNonNull(modid, "modid must not be null");
+        Objects.requireNonNull(registerAction, "registerAction is null");
+        Objects.requireNonNull(modid, "modid is null");
         this.registerAction = registerAction;
         this.modid = modid;
     }
@@ -32,6 +32,8 @@ public class RegistryHelper<T> implements Map<T, Identifier> {
     }
 
     public <R extends T> R add(R object, Identifier id) {
+        Objects.requireNonNull(object, "object is null");
+        Objects.requireNonNull(id, "id is null");
         requireNotFrozen();
         registeredObjects.put(object, id);
         registerAction.accept(id, object);
@@ -39,6 +41,7 @@ public class RegistryHelper<T> implements Map<T, Identifier> {
     }
 
     public <R extends T> R add(R object, String name) {
+        Objects.requireNonNull(name, "name is null");
         return add(object, Identifier.fromNamespaceAndPath(modid, name));
     }
 

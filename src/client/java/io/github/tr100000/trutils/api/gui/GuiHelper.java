@@ -19,6 +19,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import org.jetbrains.annotations.Contract;
 import org.joml.Matrix3x2f;
 
 import java.util.List;
@@ -28,26 +29,32 @@ public final class GuiHelper {
 
     private GuiHelper() {}
 
+    @Contract(pure = true)
     public static boolean isMouseTouching(int x, int y, int width, int height, int mouseX, int mouseY) {
         return mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height;
     }
 
+    @Contract(pure = true)
     public static boolean isMouseTouching(int x, int y, int width, int height, double mouseX, double mouseY) {
         return mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height;
     }
 
+    @Contract(pure = true)
     public static boolean isMouseTouching(LayoutElement widget, int mouseX, int mouseY) {
         return isMouseTouching(widget.getX(), widget.getY(), widget.getWidth(), widget.getHeight(), mouseX, mouseY);
     }
 
+    @Contract(pure = true)
     public static boolean isMouseTouching(int x, int y, int width, int height) {
         return isMouseTouching(x, y, width, height, getMouseX(), getMouseY());
     }
 
+    @Contract(pure = true)
     public static int getMouseX() {
         return Mth.floor(client.mouseHandler.xpos() * client.getWindow().getGuiScaledWidth() / client.getWindow().getScreenWidth());
     }
 
+    @Contract(pure = true)
     public static int getMouseY() {
         return Mth.floor(client.mouseHandler.ypos() * client.getWindow().getGuiScaledHeight() / client.getWindow().getScreenHeight());
     }
@@ -76,6 +83,7 @@ public final class GuiHelper {
         }
     }
 
+    @Contract(pure = true)
     public static List<Component> getItemTooltip(ItemStack stack) {
         return stack.getTooltipLines(Item.TooltipContext.of(client.level), client.player, client.options.advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL);
     }
@@ -107,10 +115,12 @@ public final class GuiHelper {
         graphics.setTooltipForNextFrameInternal(textRenderer, components, x, y, tooltipPositioner, null, false);
     }
 
+    @Contract(pure = true)
     public static boolean isKeyboard() {
         return client.getLastInputType().isKeyboard();
     }
 
+    @Contract(pure = true)
     public static ClientTooltipPositioner widgetPositionerFor(AbstractWidget widget) {
         return !widget.isHovered() && widget.isFocused() && isKeyboard() ? new MenuTooltipPositioner(widget.getRectangle()) : DefaultTooltipPositioner.INSTANCE;
     }

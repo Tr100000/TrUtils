@@ -18,9 +18,9 @@ import java.util.List;
 public abstract class ReloadableResourceManagerMixin {
     @Shadow @Final private PackType type;
 
-    @ModifyVariable(method = "createReload", at = @At("HEAD"), ordinal = 0, argsOnly = true)
-    private List<PackResources> injectPacks(List<PackResources> packs) {
+    @ModifyVariable(method = "createReload", at = @At("HEAD"), argsOnly = true)
+    private List<PackResources> injectPacks(List<PackResources> resourcePacks) {
         TrUtils.LOGGER.debug("Reloadable inject {}", type.name());
-        return RuntimeDatagen.injectAllPacks(new ObjectArrayList<>(packs), type);
+        return RuntimeDatagen.injectAllPacks(new ObjectArrayList<>(resourcePacks), type);
     }
 }

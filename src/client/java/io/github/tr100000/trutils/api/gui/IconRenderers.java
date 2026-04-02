@@ -3,6 +3,7 @@ package io.github.tr100000.trutils.api.gui;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import org.jetbrains.annotations.Contract;
 
 public final class IconRenderers {
     private IconRenderers() {}
@@ -20,6 +21,7 @@ public final class IconRenderers {
     }
 
     @SuppressWarnings("unchecked")
+    @Contract(pure = true)
     public static <T extends Icon> IconRenderer<T> fromIcon(T icon) {
         return (IconRenderer<T>)REGISTRY.get(icon.getType());
     }
