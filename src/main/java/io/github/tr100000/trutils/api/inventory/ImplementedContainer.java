@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
  * Originally by Juuz
  */
 @FunctionalInterface
-public interface ImplementedInventory extends Container {
+public interface ImplementedContainer extends Container {
     /**
      * Retrieves the item list of this inventory.
      * Must return the same instance every time it's called.
@@ -23,14 +23,14 @@ public interface ImplementedInventory extends Container {
     /**
      * Creates an inventory from the item list.
      */
-    static ImplementedInventory of(NonNullList<ItemStack> items) {
+    static ImplementedContainer of(NonNullList<ItemStack> items) {
         return () -> items;
     }
 
     /**
      * Creates a new inventory with the specified size.
      */
-    static ImplementedInventory ofSize(int size) {
+    static ImplementedContainer ofSize(int size) {
         return of(NonNullList.withSize(size, ItemStack.EMPTY));
     }
 

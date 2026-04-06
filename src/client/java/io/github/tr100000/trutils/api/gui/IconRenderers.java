@@ -2,8 +2,11 @@ package io.github.tr100000.trutils.api.gui;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import io.github.tr100000.trutils.TrUtils;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import org.jetbrains.annotations.Contract;
+
+import java.util.Map;
 
 public final class IconRenderers {
     private IconRenderers() {}
@@ -13,7 +16,14 @@ public final class IconRenderers {
     static {
         register(BlankIcon.TYPE, BlankIconRenderer.INSTANCE);
         register(ItemIcon.TYPE, ItemIconRenderer.INSTANCE);
+        register(SpriteIcon.TYPE, SpriteIconRenderer.INSTANCE);
         register(TextureIcon.TYPE, TextureIconRenderer.INSTANCE);
+
+        for (Map.Entry<String, Icon.IconType<?>> entry : IconTypes.REGISTRY.entrySet()) {
+            if (!REGISTRY.containsKey(entry.getValue())) {
+                TrUtils.LOGGER.warn("Icon type {} doesn't have a renderer!", entry.getKey());
+            }
+        }
     }
 
     public static <T extends Icon> void register(Icon.IconType<T> type, IconRenderer<T> renderer) {

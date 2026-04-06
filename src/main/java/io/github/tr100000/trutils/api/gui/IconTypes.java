@@ -11,6 +11,7 @@ public final class IconTypes {
     static {
         REGISTRY.put("blank", BlankIcon.TYPE);
         REGISTRY.put("item", ItemIcon.TYPE);
+        REGISTRY.put("sprite", SpriteIcon.TYPE);
         REGISTRY.put("texture", TextureIcon.TYPE);
     }
 }

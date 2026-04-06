@@ -1,7 +1,7 @@
 package io.github.tr100000.trutils.api.gui.component;
 
 import io.github.tr100000.trutils.api.gui.ScreenHandlerWithInventory;
-import io.github.tr100000.trutils.api.inventory.EmptyInventory;
+import io.github.tr100000.trutils.api.inventory.EmptyContaienr;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -48,7 +48,7 @@ public abstract class AbstractComponentScreenHandler<T extends GuiComponent> ext
             inventory = componentInventories.values().iterator().next();
         }
         else {
-            inventory = EmptyInventory.INSTANCE;
+            inventory = EmptyContaienr.INSTANCE;
         }
     }
 

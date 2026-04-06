@@ -4,7 +4,7 @@ import io.github.tr100000.trutils.api.item.WideAreaAxeItem;
 import io.github.tr100000.trutils.api.item.WideAreaHoeItem;
 import io.github.tr100000.trutils.api.item.WideAreaShovelItem;
 import io.github.tr100000.trutils.api.item.WideAreaToolItem;
-import io.github.tr100000.trutils.api.utils.ItemRegistryHelper;
+import io.github.tr100000.trutils.api.registry.ItemRegistryHelper;
 import io.github.tr100000.trutils.testmod.TrUtilsTestmod;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ToolMaterial;

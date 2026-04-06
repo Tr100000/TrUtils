@@ -9,5 +9,6 @@ public class TrUtilsTestmodDatagen implements RuntimeDatagenEntrypoint {
         FabricDataGenerator.Pack pack = generator.createPack();
         pack.addProvider(TestmodEnglishLangProvider::new);
         pack.addProvider(TestmodModelProvider::new);
+        pack.addProvider(TestmodItemTagsProvider::new);
     }
 }

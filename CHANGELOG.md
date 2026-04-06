@@ -1,1 +1,6 @@
-**Updated to 26.1**
+### Added
+- `SpriteIcon`
+
+### Changed
+- Renamed some stuff
+- Moved some stuff around

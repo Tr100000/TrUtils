@@ -4,10 +4,10 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
-public final class EmptyInventory implements Container {
-    public static final EmptyInventory INSTANCE = new EmptyInventory();
+public final class EmptyContaienr implements Container {
+    public static final EmptyContaienr INSTANCE = new EmptyContaienr();
 
-    private EmptyInventory() {}
+    private EmptyContaienr() {}
 
     @Override
     public int getContainerSize() {

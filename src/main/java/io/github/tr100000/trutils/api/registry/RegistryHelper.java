@@ -1,4 +1,4 @@
-package io.github.tr100000.trutils.api.utils;
+package io.github.tr100000.trutils.api.registry;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
