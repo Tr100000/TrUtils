@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.0-beta.2+26.1.2]
+
+### Added
+- `SpriteIcon` (use type `"sprite"`)
+- Added an `ExtendedLanguageProvider` that allows you to read existing json files when generating translations
+
+### Changed
+- Renamed some stuff
+- Moved some stuff around
+
 ## [0.2.0-beta.1+26.1]
 
 **Updated to 26.1**
