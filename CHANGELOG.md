@@ -1,7 +1,4 @@
-### Added
-- `SpriteIcon` (use type `"sprite"`)
-- Added an `ExtendedLanguageProvider` that allows you to read existing json files when generating translations
+**Updated to 26.2**
 
 ### Changed
-- Renamed some stuff
-- Moved some stuff around
+- Changed many things in `RegistryHelper`, `ItemRegistryHelper`, and `BlockRegistryHelper` because the game needs `ResourceKey` everywhere

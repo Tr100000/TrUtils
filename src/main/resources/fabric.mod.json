@@ -26,10 +26,10 @@
   ],
   "accessWidener": "trutils.classtweaker",
   "depends": {
-    "fabricloader": ">=0.18",
-    "minecraft": "~26.1",
+    "fabricloader": ">=0.19",
+    "minecraft": "~26.2-",
     "java": ">=25",
-    "fabric-api": ">=0.144"
+    "fabric-api": ">=0.150"
   },
   "suggests": {
     "modmenu": "*"

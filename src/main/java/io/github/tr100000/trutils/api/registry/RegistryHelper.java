@@ -2,6 +2,7 @@ package io.github.tr100000.trutils.api.registry;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 
 import java.util.Collection;
 import java.util.LinkedHashMap;
@@ -9,38 +10,46 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.function.BiConsumer;
+import java.util.function.Function;
 
 /**
  * A helper class for registering items
  * @param <T> the type of thing to be registered
  */
-public class RegistryHelper<T> implements Map<T, Identifier> {
-    protected final BiConsumer<Identifier, T> registerAction;
+public class RegistryHelper<T> implements Map<T, ResourceKey<T>> {
+    protected final Function<Identifier, ResourceKey<T>> toResourceKey;
+    protected final BiConsumer<ResourceKey<T>, T> registerAction;
     protected final String modid;
-    protected final Map<T, Identifier> registeredObjects = new LinkedHashMap<>();
+    protected final Map<T, ResourceKey<T>> registeredObjects = new LinkedHashMap<>();
     protected boolean frozen;
 
-    public RegistryHelper(BiConsumer<Identifier, T> registerAction, String modid) {
+    public RegistryHelper(BiConsumer<ResourceKey<T>, T> registerAction, Function<Identifier, ResourceKey<T>> toResourceKey, String modid) {
         Objects.requireNonNull(registerAction, "registerAction is null");
+        Objects.requireNonNull(toResourceKey, "toResourceKey is null");
         Objects.requireNonNull(modid, "modid is null");
+        this.toResourceKey = toResourceKey;
         this.registerAction = registerAction;
         this.modid = modid;
     }
 
-    public RegistryHelper(Registry<? super T> registry, String modid) {
-        this((id, object) -> Registry.register(registry, id, object), modid);
+    public RegistryHelper(Registry<T> registry, String modid) {
+        this((id, object) -> Registry.register(registry, id, object), id -> ResourceKey.create(registry.key(), id), modid);
     }
 
-    public <R extends T> R add(R object, Identifier id) {
+    public <V extends T> V add(V object, ResourceKey<T> key) {
         Objects.requireNonNull(object, "object is null");
-        Objects.requireNonNull(id, "id is null");
+        Objects.requireNonNull(key, "key is null");
         requireNotFrozen();
-        registeredObjects.put(object, id);
-        registerAction.accept(id, object);
+        registeredObjects.put(object, key);
+        registerAction.accept(key, object);
         return object;
     }
 
-    public <R extends T> R add(R object, String name) {
+    public <V extends T> V add(V object, Identifier id) {
+        return add(object, toResourceKey.apply(id));
+    }
+
+    public <V extends T> V add(V object, String name) {
         Objects.requireNonNull(name, "name is null");
         return add(object, Identifier.fromNamespaceAndPath(modid, name));
     }
@@ -77,24 +86,24 @@ public class RegistryHelper<T> implements Map<T, Identifier> {
     }
 
     @Override
-    public Identifier get(Object key) {
+    public ResourceKey<T> get(Object key) {
         return registeredObjects.get(key);
     }
 
     @Override
-    public Identifier put(T key, Identifier value) {
+    public ResourceKey<T> put(T key, ResourceKey<T> value) {
         add(key, value);
         return value;
     }
 
     @Override
-    public Identifier remove(Object key) {
+    public ResourceKey<T> remove(Object key) {
         requireNotFrozen();
         return registeredObjects.remove(key);
     }
 
     @Override
-    public void putAll(Map<? extends T, ? extends Identifier> m) {
+    public void putAll(Map<? extends T, ? extends ResourceKey<T>> m) {
         m.forEach(this::add);
     }
 
@@ -110,12 +119,12 @@ public class RegistryHelper<T> implements Map<T, Identifier> {
     }
 
     @Override
-    public Collection<Identifier> values() {
+    public Collection<ResourceKey<T>> values() {
         return registeredObjects.values();
     }
 
     @Override
-    public Set<Entry<T, Identifier>> entrySet() {
+    public Set<Entry<T, ResourceKey<T>>> entrySet() {
         return registeredObjects.entrySet();
     }
 }

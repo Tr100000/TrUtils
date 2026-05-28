@@ -14,8 +14,8 @@ public final class TestmodItems {
 
     public static final ItemRegistryHelper REGISTRY = new ItemRegistryHelper(TrUtilsTestmod.MODID);
 
-    public static final Item WIDE_PICKAXE = REGISTRY.addItem(settings -> new WideAreaToolItem(settings.pickaxe(ToolMaterial.NETHERITE, 5, 5), 1, 1), new Item.Properties(), "wide_pickaxe");
-    public static final Item WIDE_AXE = REGISTRY.addItem(settings -> new WideAreaAxeItem(ToolMaterial.NETHERITE, 5, 5, settings, 1, 1), new Item.Properties(), "wide_axe");
-    public static final Item WIDE_SHOVEL = REGISTRY.addItem(settings -> new WideAreaShovelItem(ToolMaterial.NETHERITE, 5, 5, settings, 1, 1), new Item.Properties(), "wide_shovel");
-    public static final Item WIDE_HOE = REGISTRY.addItem(settings -> new WideAreaHoeItem(ToolMaterial.NETHERITE, 5, 5, settings, 1, 1), new Item.Properties(), "wide_hoe");
+    public static final Item WIDE_PICKAXE = REGISTRY.addItem(TestmodItemIds.WIDE_PICKAXE, settings -> new WideAreaToolItem(settings.pickaxe(ToolMaterial.NETHERITE, 5, 5), 1, 1));
+    public static final Item WIDE_AXE = REGISTRY.addItem(TestmodItemIds.WIDE_AXE, settings -> new WideAreaAxeItem(ToolMaterial.NETHERITE, 5, 5, settings, 1, 1));
+    public static final Item WIDE_SHOVEL = REGISTRY.addItem(TestmodItemIds.WIDE_SHOVEL, settings -> new WideAreaShovelItem(ToolMaterial.NETHERITE, 5, 5, settings, 1, 1));
+    public static final Item WIDE_HOE = REGISTRY.addItem(TestmodItemIds.WIDE_HOE, settings -> new WideAreaHoeItem(ToolMaterial.NETHERITE, 5, 5, settings, 1, 1));
 }

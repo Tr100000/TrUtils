@@ -1,6 +1,6 @@
 package io.github.tr100000.trutils.testmod.datagen;
 
-import io.github.tr100000.trutils.testmod.registry.TestmodItems;
+import io.github.tr100000.trutils.testmod.registry.TestmodItemIds;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.minecraft.core.HolderLookup;
@@ -15,13 +15,13 @@ public class TestmodItemTagsProvider extends FabricTagsProvider.ItemTagsProvider
 
     @Override
     protected void addTags(HolderLookup.Provider registries) {
-        valueLookupBuilder(ItemTags.PICKAXES)
-                .add(TestmodItems.WIDE_PICKAXE);
-        valueLookupBuilder(ItemTags.AXES)
-                .add(TestmodItems.WIDE_AXE);
-        valueLookupBuilder(ItemTags.SHOVELS)
-                .add(TestmodItems.WIDE_SHOVEL);
-        valueLookupBuilder(ItemTags.HOES)
-                .add(TestmodItems.WIDE_HOE);
+        builder(ItemTags.PICKAXES)
+                .add(TestmodItemIds.WIDE_PICKAXE);
+        builder(ItemTags.AXES)
+                .add(TestmodItemIds.WIDE_AXE);
+        builder(ItemTags.SHOVELS)
+                .add(TestmodItemIds.WIDE_SHOVEL);
+        builder(ItemTags.HOES)
+                .add(TestmodItemIds.WIDE_HOE);
     }
 }
