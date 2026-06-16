@@ -24,9 +24,8 @@ import static net.minecraft.commands.Commands.literal;
 public final class TrUtilsCommand {
     private TrUtilsCommand() {}
 
-    private static final SuggestionProvider<CommandSourceStack> REGISTRIES = (context, builder) -> {
-        return SharedSuggestionProvider.suggestResource(BuiltInRegistries.REGISTRY.keySet(), builder);
-    };
+    private static final SuggestionProvider<CommandSourceStack> REGISTRIES = (_, builder) ->
+            SharedSuggestionProvider.suggestResource(BuiltInRegistries.REGISTRY.keySet(), builder);
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(literal(TrUtils.MODID)

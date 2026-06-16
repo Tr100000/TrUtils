@@ -25,9 +25,8 @@ public final class CommandSuggestionProviders {
     public record RegistrySuggestionProvider<S extends SharedSuggestionProvider>(Registry<?> registry) implements SuggestionProvider<S> {
         @Override
         public CompletableFuture<Suggestions> getSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-            registry.keySet().forEach(id -> {
-                builder.suggest(id.toString(), Component.translatable(id.toLanguageKey(registry.key().identifier().getPath())));
-            });
+            registry.keySet().forEach(id ->
+                    builder.suggest(id.toString(), Component.translatable(id.toLanguageKey(registry.key().identifier().getPath()))));
             return builder.buildFuture();
         }
     }

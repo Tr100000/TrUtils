@@ -8,7 +8,9 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullMarked;
 
+@NullMarked
 public class ComponentScreen<T extends GuiComponentClient<?>, H extends ClientComponentScreenHandler<T>> extends AbstractContainerScreen<H> {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static AbstractContainerScreen<AbstractComponentScreenHandler<?>> create(AbstractComponentScreenHandler<?> handler, Inventory playerInventory, Component title) {

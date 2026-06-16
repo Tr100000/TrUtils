@@ -51,7 +51,7 @@ public class ItemRegistryHelper extends RegistryHelper<Item> {
     public Item addBlock(
             BlockItemId id, Block block, BiFunction<Block, Item.Properties, Item> itemFactory, Item.Properties properties
     ) {
-        return addItem(id.item(), p -> (Item)itemFactory.apply(block, p), properties.useBlockDescriptionPrefix().requiredFeatures(block.requiredFeatures()));
+        return addItem(id.item(), p -> itemFactory.apply(block, p), properties.useBlockDescriptionPrefix().requiredFeatures(block.requiredFeatures()));
     }
 
     public Item addItem(ResourceKey<Item> id) {
