@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
- * Somewhere inbetween a JS Promise and an {@link java.util.Optional}, but worse in every way
+ * Somewhere inbetween a JS Promise and an {@link java.util.Optional}
  * @param <T> The type of the value to be hopefully held
  * @see java.util.Optional
  */

@@ -14,7 +14,7 @@ import java.util.List;
 
 @Mixin(MultiPackResourceManager.class)
 public abstract class MultiPackResourceManagerMixin {
-    @ModifyVariable(method = "<init>", at = @At("HEAD"), argsOnly = true)
+    @ModifyVariable(method = "<init>", at = @At("HEAD"), argsOnly = true, name = "packs")
     private static List<PackResources> modifyPacks(List<PackResources> packs, PackType type) {
         TrUtils.LOGGER.debug("Lifecycled inject {}", type.name());
         return RuntimeDatagen.injectAllPacks(new ObjectArrayList<>(packs), type);

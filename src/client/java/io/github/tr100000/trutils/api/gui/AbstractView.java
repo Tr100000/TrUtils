@@ -7,9 +7,11 @@ import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import org.jspecify.annotations.NullMarked;
 
 import java.util.List;
 
+@NullMarked
 public abstract class AbstractView extends AbstractContainerEventHandler implements Renderable, NarratableEntry {
     private final List<GuiEventListener> children = new ObjectArrayList<>();
     private final List<Renderable> drawables = new ObjectArrayList<>();

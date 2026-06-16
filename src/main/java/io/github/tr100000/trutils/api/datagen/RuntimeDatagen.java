@@ -41,9 +41,8 @@ public final class RuntimeDatagen {
     public static void runAll() {
         finishedMods.clear();
         generatedPacks.clear();
-        FabricLoader.getInstance().getEntrypointContainers("trutils:datagen", RuntimeDatagenEntrypoint.class).forEach(entrypoint -> {
-            run(entrypoint.getEntrypoint(), entrypoint.getProvider().getMetadata().getId());
-        });
+        FabricLoader.getInstance().getEntrypointContainers("trutils:datagen", RuntimeDatagenEntrypoint.class).forEach(entrypoint ->
+                run(entrypoint.getEntrypoint(), entrypoint.getProvider().getMetadata().getId()));
     }
 
     @SuppressWarnings("UnstableApiUsage")
