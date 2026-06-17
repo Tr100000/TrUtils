@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0-beta.1+26.2]
+
+**Updated to 26.2**
+
+### Changed
+- Changed many things in `RegistryHelper`, `ItemRegistryHelper`, and `BlockRegistryHelper` because the game needs `ResourceKey` everywhere now
+
 ## [0.2.0-beta.2+26.1.2]
 
 ### Added
