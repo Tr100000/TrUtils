@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.0+26.2]
+
+### Added
+- Added the `trutils:datagen/client` entrypoint for client-only runtime datagen
+- Mods can now have multiple runtime datagen entrypoints
+
 ## [0.3.0-beta.1+26.2]
 
 **Updated to 26.2**
