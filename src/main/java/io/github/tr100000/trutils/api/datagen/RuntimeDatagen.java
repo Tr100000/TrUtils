@@ -1,17 +1,22 @@
 package io.github.tr100000.trutils.api.datagen;
 
 import com.google.common.base.MoreObjects;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import io.github.tr100000.trutils.ClientDelegate;
 import io.github.tr100000.trutils.TrUtils;
 import io.github.tr100000.trutils.api.utils.Utils;
 import io.github.tr100000.trutils.mixin.FabricDataGenHelperAccessor;
-import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
@@ -20,8 +25,8 @@ import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.util.Util;
 
 import java.nio.file.Path;
+import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -29,20 +34,44 @@ import java.util.function.Consumer;
 public final class RuntimeDatagen {
     private RuntimeDatagen() {}
 
+    public static final String ENTRYPOINT_KEY_MAIN = "trutils:datagen";
+    public static final String ENTRYPOINT_KEY_CLIENT = "trutils:datagen/client";
+
     public static final Path ROOT_PATH = TrUtils.RUNTIME_DATAGEN_PATH;
     public static final PackSource PACK_SOURCE = PackSource.create(name -> {
         Component text = Component.translatable("pack.source.generated");
         return Component.translatable("pack.nameAndSource", name, text).withStyle(ChatFormatting.GRAY);
     }, false);
 
-    private static final Map<ModContainer, RuntimeDatagenEntrypoint> finishedMods = new Object2ObjectLinkedOpenHashMap<>();
-    private static final Map<ModContainer, GeneratedPackResourcesPair> generatedPacks = new Object2ObjectLinkedOpenHashMap<>();
+    private static final Multimap<ModContainer, RuntimeDatagenEntrypoint> finishedMods = HashMultimap.create();
+    private static final Multimap<ModContainer, GeneratedPackResourcesPair> generatedPacks = HashMultimap.create();
 
     public static void runAll() {
         finishedMods.clear();
         generatedPacks.clear();
-        FabricLoader.getInstance().getEntrypointContainers("trutils:datagen", RuntimeDatagenEntrypoint.class).forEach(entrypoint ->
-                run(entrypoint.getEntrypoint(), entrypoint.getProvider().getMetadata().getId()));
+
+        try {
+            Utils.deleteFolder(ROOT_PATH);
+        }
+        catch (Exception e) {
+            throw new RuntimeDatagenException("Failed to remove old datagen folder", e);
+        }
+
+        List<EntrypointContainer<RuntimeDatagenEntrypoint>> entrypoints = new ObjectArrayList<>();
+        for (String key : ClientDelegate.INSTANCE.runtimeDatagenEntrypoints()) {
+            entrypoints.addAll(FabricLoader.getInstance().getEntrypointContainers(key, RuntimeDatagenEntrypoint.class));
+        }
+        entrypoints.forEach(e -> run(e.getEntrypoint(), e.getProvider().getMetadata().getId()));
+    }
+
+    private static String getEntrypointName(RuntimeDatagenEntrypoint entrypoint, String modid) {
+        Identifier id = entrypoint.getId();
+        if (id != null) {
+            return id.toString();
+        }
+        else {
+            return modid;
+        }
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -50,9 +79,10 @@ public final class RuntimeDatagen {
         modid = MoreObjects.firstNonNull(entrypoint.getEffectiveModId(), modid);
         Path outputPath = ROOT_PATH.resolve(modid);
 
-        TrUtils.LOGGER.info("Starting runtime datagen for {}", modid);
+        String entrypointName = getEntrypointName(entrypoint, modid);
+
+        TrUtils.LOGGER.info("Starting runtime datagen for {}", entrypointName);
         try {
-            Utils.deleteFolder(outputPath);
             ModContainer mod = FabricLoader.getInstance().getModContainer(modid).orElseThrow();
             CompletableFuture<HolderLookup.Provider> registriesFuture = CompletableFuture.supplyAsync(() -> FabricDataGenHelperAccessor.invokeCreateHolderLookupProvider(List.of(entrypoint)), Util.backgroundExecutor());
             FabricDataGenerator generator = new FabricDataGenerator(outputPath, mod, entrypoint.strictValidation(), registriesFuture);
@@ -64,16 +94,18 @@ public final class RuntimeDatagen {
         catch (Exception e) {
             throw new RuntimeDatagenException(String.format("Runtime datagen failed for %s!", modid), e);
         }
-        TrUtils.LOGGER.info("Finished runtime datagen for {}", modid);
+        TrUtils.LOGGER.info("Finished runtime datagen for {}", entrypointName);
     }
 
     public static List<PackResources> injectAllPacks(List<PackResources> packs, PackType type) {
-        finishedMods.keySet().forEach(mod -> {
-            GeneratedPackResourcesPair packPair = generatedPacks.get(mod);
-            if (packPair != null && packPair.hasPack(type)) {
-                injectPack(packs, packPair.getPack(type));
+        for (ModContainer mod : finishedMods.keySet()) {
+            Collection<GeneratedPackResourcesPair> generatedPacks = RuntimeDatagen.generatedPacks.get(mod);
+            for (GeneratedPackResourcesPair pair : generatedPacks) {
+                if (pair.hasPack(type)) {
+                    injectPack(packs, pair.getPack(type));
+                }
             }
-        });
+        }
         return packs;
     }
 
@@ -98,11 +130,11 @@ public final class RuntimeDatagen {
     }
 
     public static void forEachPack(PackType type, Consumer<GeneratedPackResources> packConsumer) {
-        generatedPacks.values().forEach(pair -> {
+        for (GeneratedPackResourcesPair pair : generatedPacks.values()) {
             if (pair.hasPack(type)) {
                 packConsumer.accept(pair.getPack(type));
             }
-        });
+        }
     }
 
     public static GeneratedPackResources createPack(ModContainer mod, PackType type) {
@@ -119,8 +151,13 @@ public final class RuntimeDatagen {
         return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
     }
 
+    public static Collection<RuntimeDatagenEntrypoint> getEntrypoints(ModContainer mod) {
+        return finishedMods.get(mod);
+    }
+
+    @Deprecated(forRemoval = true, since = "0.3.0")
     public static Optional<RuntimeDatagenEntrypoint> getEntrypoint(ModContainer mod) {
-        return Optional.ofNullable(finishedMods.get(mod));
+        return getEntrypoints(mod).stream().findFirst();
     }
 
     public static Path getPath(ModContainer mod) {

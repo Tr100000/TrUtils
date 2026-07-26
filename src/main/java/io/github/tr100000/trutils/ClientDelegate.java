@@ -5,6 +5,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.world.entity.player.Inventory;
 
+import java.util.List;
+
 public abstract class ClientDelegate {
     public static final ClientDelegate INSTANCE = create();
 
@@ -24,5 +26,8 @@ public abstract class ClientDelegate {
     }
 
     public abstract boolean isClient();
+
     public abstract AbstractComponentScreenHandler<?> createComponentScreenHandler(int syncId, Inventory playerInventory, AbstractComponentScreenHandler.Payload payload);
+
+    public abstract List<String> runtimeDatagenEntrypoints();
 }

@@ -2,7 +2,9 @@ package io.github.tr100000.trutils.api.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
+import org.jspecify.annotations.Nullable;
 
 @FunctionalInterface
 public interface RuntimeDatagenEntrypoint extends DataGeneratorEntrypoint {
@@ -15,6 +17,10 @@ public interface RuntimeDatagenEntrypoint extends DataGeneratorEntrypoint {
 
     default ResourceTypes generatedTypes() {
         return ResourceTypes.BOTH;
+    }
+
+    default @Nullable Identifier getId() {
+        return null;
     }
 
     enum ResourceTypes {

@@ -22,7 +22,7 @@ public abstract class ServerLanguageUtilMixin {
     @Inject(method = "getModLanguageFiles", at = @At(value = "INVOKE", target = "Ljava/util/Collections;unmodifiableCollection(Ljava/util/Collection;)Ljava/util/Collection;"))
     private static void injectGenerated(CallbackInfoReturnable<Collection<Path>> cir, @Local(name = "paths") Set<Path> paths) {
         for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
-            RuntimeDatagen.getEntrypoint(mod).ifPresent(entrypoint -> {
+            if (!RuntimeDatagen.getEntrypoints(mod).isEmpty()) {
                 Path path = RuntimeDatagen.getPath(mod)
                         .resolve("assets")
                         .resolve(mod.getMetadata().getId())
@@ -31,7 +31,7 @@ public abstract class ServerLanguageUtilMixin {
                 if (Files.isRegularFile(path)) {
                     paths.add(path);
                 }
-            });
+            }
         }
     }
 }
