@@ -1,7 +1,3 @@
 ### Added
-- `SpriteIcon` (use type `"sprite"`)
-- Added an `ExtendedLanguageProvider` that allows you to read existing json files when generating translations
-
-### Changed
-- Renamed some stuff
-- Moved some stuff around
+- Added the `trutils:datagen/client` entrypoint for client-only runtime datagen
+- Mods can now have multiple runtime datagen entrypoints
