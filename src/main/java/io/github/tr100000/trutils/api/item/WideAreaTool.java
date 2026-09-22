@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.level.ServerPlayerGameMode;
 import net.minecraft.stats.Stats;
@@ -119,40 +120,40 @@ public interface WideAreaTool {
         return blocksToBreak;
     }
 
-    default void breakBlocks(Level world, Player player, ItemStack stack) {
-        if (!world.isClientSide()) {
+    default void breakBlocks(Level level, Player player, ItemStack stack) {
+        if (!level.isClientSide()) {
             ServerPlayerGameMode interactionManager = ((ServerPlayer)player).gameMode;
             interactionManager.trutils_setIsMining(true);
 
             WideAreaTool tool = (WideAreaTool)stack.getItem();
-            List<BlockPos> blocksToBreak = findBlocksToBreak(world, player, tool.getBreakRadius(stack), tool.getDepth(stack));
+            List<BlockPos> blocksToBreak = findBlocksToBreak(level, player, tool.getBreakRadius(stack), tool.getDepth(stack));
             for (BlockPos brokenPos : blocksToBreak) {
-                BlockState state = world.getBlockState(brokenPos);
-                BlockEntity blockEntity = world.getBlockState(brokenPos).hasBlockEntity() ? world.getBlockEntity(brokenPos) : null;
+                BlockState state = level.getBlockState(brokenPos);
+                BlockEntity blockEntity = level.getBlockState(brokenPos).hasBlockEntity() ? level.getBlockEntity(brokenPos) : null;
 
-                if (player.isCreative() || isBlockValidForBreaking(world, brokenPos, stack) && !state.isAir()) {
-                    BlockState newState = state.getBlock().playerWillDestroy(world, brokenPos, state, player);
+                if (player.isCreative() || isBlockValidForBreaking(level, brokenPos, stack) && !state.isAir()) {
+                    BlockState newState = state.getBlock().playerWillDestroy(level, brokenPos, state, player);
                     if (!interactionManager.destroyBlock(brokenPos)) {
                         continue;
                     }
 
-                    if (!PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(world, player, brokenPos, state, blockEntity)) {
-                        PlayerBlockBreakEvents.CANCELED.invoker().onBlockBreakCanceled(world, player, brokenPos, state, blockEntity);
+                    if (!PlayerBlockBreakEvents.BEFORE.invoker().beforeBlockBreak(level, player, brokenPos, state, blockEntity)) {
+                        PlayerBlockBreakEvents.CANCELED.invoker().onBlockBreakCanceled(level, player, brokenPos, state, blockEntity);
                         continue;
                     }
 
-                    boolean didRemoveBlock = world.removeBlock(brokenPos, false);
+                    boolean didRemoveBlock = level.removeBlock(brokenPos, false);
                     if (didRemoveBlock) {
-                        state.getBlock().destroy(world, brokenPos, state);
-                        PlayerBlockBreakEvents.AFTER.invoker().afterBlockBreak(world, player, brokenPos, state, blockEntity);
+                        state.getBlock().destroy(level, brokenPos, state);
+                        PlayerBlockBreakEvents.AFTER.invoker().afterBlockBreak(level, player, brokenPos, state, blockEntity);
                     }
 
                     if (!player.preventsBlockDrops()) {
                         boolean usingEffectiveTool = player.hasCorrectToolForDrops(state);
                         ItemStack copiedStack = stack.copy();
-                        stack.mineBlock(world, state, brokenPos, player);
+                        stack.mineBlock(level, state, brokenPos, player);
                         if (didRemoveBlock && usingEffectiveTool) {
-                            state.getBlock().playerDestroy(world, player, brokenPos, newState, blockEntity, copiedStack);
+                            state.getBlock().playerDestroy((ServerLevel)level, (ServerPlayer)player, brokenPos, newState, blockEntity, copiedStack);
                             player.awardStat(Stats.BLOCK_MINED.get(state.getBlock()));
                             player.causeFoodExhaustion(0.005F);
                         }
@@ -183,50 +184,5 @@ public interface WideAreaTool {
             }
         }
         return result;
-    }
-
-    @Deprecated(forRemoval = true)
-    static ToolType createPickaxeType(WideAreaSpecificToolFactory<?> factory, int breakRadius, int depth) {
-        return (material, attackDamage, attackSpeed, settings) -> factory.apply(material, attackDamage, attackSpeed, settings, breakRadius, depth);
-    }
-
-    @Deprecated(forRemoval = true)
-    static ToolType createPickaxeType(WideAreaToolFactory<?> factory, int breakRadius, int depth) {
-        return createPickaxeType((material, attackDamage, attackSpeed, settings, breakRadius2, depth2) -> factory.apply(settings.pickaxe(material, attackDamage, attackSpeed), breakRadius2, depth2), breakRadius, depth);
-    }
-
-    @Deprecated(forRemoval = true)
-    static ToolType createPickaxeType(int breakRadius, int depth) {
-        return createPickaxeType(WideAreaToolItem::new, breakRadius, depth);
-    }
-
-    @Deprecated(forRemoval = true)
-    static ToolType createAxeType(WideAreaSpecificToolFactory<?> factory, int breakRadius, int depth) {
-        return (material, attackDamage, attackSpeed, settings) -> factory.apply(material, attackDamage, attackSpeed, settings, breakRadius, depth);
-    }
-
-    @Deprecated(forRemoval = true)
-    static ToolType createAxeType(int breakRadius, int depth) {
-        return createAxeType(WideAreaAxeItem::new, breakRadius, depth);
-    }
-
-    @Deprecated(forRemoval = true)
-    static ToolType createShovelType(WideAreaSpecificToolFactory<?> factory, int breakRadius, int depth) {
-        return (material, attackDamage, attackSpeed, settings) -> factory.apply(material, attackDamage, attackSpeed, settings, breakRadius, depth);
-    }
-
-    @Deprecated(forRemoval = true)
-    static ToolType createShovelType(int breakRadius, int depth) {
-        return createShovelType(WideAreaShovelItem::new, breakRadius, depth);
-    }
-
-    @Deprecated(forRemoval = true)
-    static ToolType createHoeType(WideAreaSpecificToolFactory<?> factory, int breakRadius, int depth) {
-        return (material, attackDamage, attackSpeed, settings) -> factory.apply(material, attackDamage, attackSpeed, settings, breakRadius, depth);
-    }
-
-    @Deprecated(forRemoval = true)
-    static ToolType createHoeType(int breakRadius, int depth) {
-        return createHoeType(WideAreaHoeItem::new, breakRadius, depth);
     }
 }

@@ -121,6 +121,7 @@ modrinth {
     projectId = "trutils"
     versionNumber = project.version
     versionName = project.version
+    versionType = project.modrinth_version_type
     uploadFile = jar
     additionalFiles = [sourcesJar]
     changelog = rootProject.file("CHANGELOG.md").text

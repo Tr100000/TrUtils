@@ -72,9 +72,10 @@ public final class RuntimeDatagen {
 
         final List<DataGeneratorEntrypoint> fabricEntrypoints = containers.stream()
                 .map(EntrypointContainer::getEntrypoint)
-                .map(runtimeDatagenEntrypoint -> (DataGeneratorEntrypoint)runtimeDatagenEntrypoint)
+                .map(DataGeneratorEntrypoint.class::cast)
                 .toList();
-        CompletableFuture<HolderLookup.Provider> registriesFuture = CompletableFuture.supplyAsync(() -> FabricDataGenHelperAccessor.invokeCreateHolderLookupProvider(fabricEntrypoints), Util.backgroundExecutor());
+        CompletableFuture<HolderLookup.Provider> worldRegistriesFuture = CompletableFuture.supplyAsync(() -> FabricDataGenHelperAccessor.invokeCreateWorldLookupProvider(fabricEntrypoints), Util.backgroundExecutor());
+        CompletableFuture<HolderLookup.Provider> registriesFuture = worldRegistriesFuture.thenApplyAsync(provider -> FabricDataGenHelperAccessor.invokeCreateReloadableLookupProvider(fabricEntrypoints, provider), Util.backgroundExecutor());
 
         Object2IntOpenHashMap<String> jsonKeySortOrders = (Object2IntOpenHashMap<String>) DataProvider.FIXED_ORDER_FIELDS;
         Object2IntOpenHashMap<String> defaultJsonKeySortOrders = new Object2IntOpenHashMap<>(jsonKeySortOrders);
@@ -99,7 +100,7 @@ public final class RuntimeDatagen {
                     keys.add(key);
                 });
 
-                FabricDataGenerator generator = new FabricDataGenerator(outputPath, mod, entrypoint.strictValidation(), registriesFuture);
+                FabricDataGenerator generator = new FabricDataGenerator(outputPath, mod, entrypoint.strictValidation(), worldRegistriesFuture, registriesFuture);
                 entrypoint.onInitializeDataGenerator(generator);
                 generator.run();
 
@@ -182,11 +183,6 @@ public final class RuntimeDatagen {
 
     public static Collection<RuntimeDatagenEntrypoint> getEntrypoints(ModContainer mod) {
         return finishedMods.get(mod);
-    }
-
-    @Deprecated(forRemoval = true, since = "0.3.0")
-    public static Optional<RuntimeDatagenEntrypoint> getEntrypoint(ModContainer mod) {
-        return getEntrypoints(mod).stream().findFirst();
     }
 
     public static Path getPath(ModContainer mod) {

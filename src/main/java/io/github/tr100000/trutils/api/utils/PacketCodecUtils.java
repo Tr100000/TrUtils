@@ -18,6 +18,7 @@ public final class PacketCodecUtils {
         return (StreamCodec<B, V>)keyCodec.map(map::get, map.inverse()::get);
     }
 
+    @SuppressWarnings("deprecation")
     @Contract(pure = true)
     public static <B extends FriendlyByteBuf, T extends Enum<T>> StreamCodec<B,T> ofEnum(Class<T> enumClass) {
         return StreamCodec.of(FriendlyByteBuf::writeEnum, buf -> buf.readEnum(enumClass));

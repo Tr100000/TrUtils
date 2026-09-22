@@ -11,8 +11,13 @@ import java.util.List;
 @SuppressWarnings("UnstableApiUsage")
 @Mixin(FabricDataGenHelper.class)
 public interface FabricDataGenHelperAccessor {
-    @Invoker("createHolderLookupProvider")
-    static HolderLookup.Provider invokeCreateHolderLookupProvider(List<DataGeneratorEntrypoint> dataGeneratorEntrypoints) {
+    @Invoker("createWorldLookupProvider")
+    static HolderLookup.Provider invokeCreateWorldLookupProvider(List<DataGeneratorEntrypoint> dataGeneratorEntrypoints) {
+        throw new AssertionError();
+    }
+
+    @Invoker("createReloadableLookupProvider")
+    static HolderLookup.Provider invokeCreateReloadableLookupProvider(List<DataGeneratorEntrypoint> dataGeneratorInitializers, HolderLookup.Provider registryLookup) {
         throw new AssertionError();
     }
 }

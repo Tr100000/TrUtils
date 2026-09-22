@@ -1,28 +1,19 @@
 package io.github.tr100000.trutils.api.inventory;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
-
-import java.util.function.Supplier;
 
 public class FuelSlot extends Slot {
-    private final Supplier<Level> world;
-
-    public FuelSlot(Supplier<Level> world, Container inventory, int index, int x, int y) {
+    public FuelSlot(Container inventory, int index, int x, int y) {
         super(inventory, index, x, y);
-        this.world = world;
-    }
-
-    public FuelSlot(Level world, Container inventory, int index, int x, int y) {
-        this(() -> world, inventory, index, x, y);
     }
 
     @Override
     public boolean mayPlace(ItemStack stack) {
-        return world.get().fuelValues().isFuel(stack) || isBucket(stack);
+        return stack.getComponents().has(DataComponents.COOKING_FUEL);
     }
 
     @Override
