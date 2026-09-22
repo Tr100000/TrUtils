@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.4.0-beta.1+26.3]
+
+**Port to 26.3**
+
+## [0.3.1+26.2]
+
+### Changed
+- Messed with runtime datagen internals to closer match normal fabric data generation behavior
+
 ## [0.3.0+26.2]
 
 ### Added
