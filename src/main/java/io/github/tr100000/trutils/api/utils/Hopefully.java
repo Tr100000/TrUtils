@@ -20,7 +20,7 @@ public class Hopefully<T> {
     private @Nullable T value;
 
     /**
-     * Creates a new empty {@link Hopefully<T>}.
+     * Creates a new empty {@code Hopefully<T>}.
      */
     @Contract("-> new")
     public static <T> Hopefully<T> empty() {
@@ -28,7 +28,7 @@ public class Hopefully<T> {
     }
 
     /**
-     * Creates a new {@link Hopefully<T>} with the given value.
+     * Creates a new {@code Hopefully<T>} with the given value.
      */
     @Contract("_ -> new")
     public static <T> Hopefully<T> ofValue(@Nullable T value) {
@@ -45,7 +45,7 @@ public class Hopefully<T> {
     }
 
     /**
-     * @return an {@link Optional<T>} that contains the value
+     * @return an {@code Optional<T>} that contains the value
      */
     public Optional<T> getOrEmpty() {
         return Optional.ofNullable(value);
@@ -84,10 +84,10 @@ public class Hopefully<T> {
     }
 
     /**
-     * Returns a new {@link Hopefully<U>} that will hold the result of applying the given mapping function to the held value.
+     * Returns a new {@code Hopefully<U>} that will hold the result of applying the given mapping function to the held value.
      * @param function the mapping function that will be performed on the held value
-     * @return a new {@link Hopefully<U>} that will hold the new result
-     * @param <U> the type of the value in the new {@link Hopefully<U>}
+     * @return a new {@code Hopefully<U>} that will hold the new result
+     * @param <U> the type of the value in the new {@code Hopefully<U>}
      * @see #whenReady(Consumer)
      */
     public <U> Hopefully<U> then(Function<T, U> function) {
@@ -101,7 +101,7 @@ public class Hopefully<T> {
      * Fulfills with the given value.
      * @param value the value
      * @throws NullPointerException if the given value is {@code null}
-     * @throws IllegalStateException if the {@link Hopefully<T>} has already been fulfilled
+     * @throws IllegalStateException if the {@code Hopefully<T>} has already been fulfilled
      */
     public void fulfill(T value) {
         Objects.requireNonNull(value, "value is null");

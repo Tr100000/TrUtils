@@ -185,38 +185,47 @@ public interface WideAreaTool {
         return result;
     }
 
+    @Deprecated(forRemoval = true)
     static ToolType createPickaxeType(WideAreaSpecificToolFactory<?> factory, int breakRadius, int depth) {
         return (material, attackDamage, attackSpeed, settings) -> factory.apply(material, attackDamage, attackSpeed, settings, breakRadius, depth);
     }
 
+    @Deprecated(forRemoval = true)
     static ToolType createPickaxeType(WideAreaToolFactory<?> factory, int breakRadius, int depth) {
         return createPickaxeType((material, attackDamage, attackSpeed, settings, breakRadius2, depth2) -> factory.apply(settings.pickaxe(material, attackDamage, attackSpeed), breakRadius2, depth2), breakRadius, depth);
     }
 
+    @Deprecated(forRemoval = true)
     static ToolType createPickaxeType(int breakRadius, int depth) {
         return createPickaxeType(WideAreaToolItem::new, breakRadius, depth);
     }
 
+    @Deprecated(forRemoval = true)
     static ToolType createAxeType(WideAreaSpecificToolFactory<?> factory, int breakRadius, int depth) {
         return (material, attackDamage, attackSpeed, settings) -> factory.apply(material, attackDamage, attackSpeed, settings, breakRadius, depth);
     }
 
+    @Deprecated(forRemoval = true)
     static ToolType createAxeType(int breakRadius, int depth) {
         return createAxeType(WideAreaAxeItem::new, breakRadius, depth);
     }
 
+    @Deprecated(forRemoval = true)
     static ToolType createShovelType(WideAreaSpecificToolFactory<?> factory, int breakRadius, int depth) {
         return (material, attackDamage, attackSpeed, settings) -> factory.apply(material, attackDamage, attackSpeed, settings, breakRadius, depth);
     }
 
+    @Deprecated(forRemoval = true)
     static ToolType createShovelType(int breakRadius, int depth) {
         return createShovelType(WideAreaShovelItem::new, breakRadius, depth);
     }
 
+    @Deprecated(forRemoval = true)
     static ToolType createHoeType(WideAreaSpecificToolFactory<?> factory, int breakRadius, int depth) {
         return (material, attackDamage, attackSpeed, settings) -> factory.apply(material, attackDamage, attackSpeed, settings, breakRadius, depth);
     }
 
+    @Deprecated(forRemoval = true)
     static ToolType createHoeType(int breakRadius, int depth) {
         return createHoeType(WideAreaHoeItem::new, breakRadius, depth);
     }

@@ -7,14 +7,17 @@ import io.github.tr100000.trutils.ClientDelegate;
 import io.github.tr100000.trutils.TrUtils;
 import io.github.tr100000.trutils.api.utils.Utils;
 import io.github.tr100000.trutils.mixin.FabricDataGenHelperAccessor;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.data.DataProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackLocationInfo;
@@ -23,14 +26,18 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.KnownPack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.util.Util;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
+@ApiStatus.Internal
 public final class RuntimeDatagen {
     private RuntimeDatagen() {}
 
@@ -46,6 +53,7 @@ public final class RuntimeDatagen {
     private static final Multimap<ModContainer, RuntimeDatagenEntrypoint> finishedMods = HashMultimap.create();
     private static final Multimap<ModContainer, GeneratedPackResourcesPair> generatedPacks = HashMultimap.create();
 
+    @SuppressWarnings("UnstableApiUsage")
     public static void runAll() {
         finishedMods.clear();
         generatedPacks.clear();
@@ -57,44 +65,65 @@ public final class RuntimeDatagen {
             throw new RuntimeDatagenException("Failed to remove old datagen folder", e);
         }
 
-        List<EntrypointContainer<RuntimeDatagenEntrypoint>> entrypoints = new ObjectArrayList<>();
+        final List<EntrypointContainer<RuntimeDatagenEntrypoint>> containers = new ObjectArrayList<>();
         for (String key : ClientDelegate.INSTANCE.runtimeDatagenEntrypoints()) {
-            entrypoints.addAll(FabricLoader.getInstance().getEntrypointContainers(key, RuntimeDatagenEntrypoint.class));
+            containers.addAll(FabricLoader.getInstance().getEntrypointContainers(key, RuntimeDatagenEntrypoint.class));
         }
-        entrypoints.forEach(e -> run(e.getEntrypoint(), e.getProvider().getMetadata().getId()));
+
+        final List<DataGeneratorEntrypoint> fabricEntrypoints = containers.stream()
+                .map(EntrypointContainer::getEntrypoint)
+                .map(runtimeDatagenEntrypoint -> (DataGeneratorEntrypoint)runtimeDatagenEntrypoint)
+                .toList();
+        CompletableFuture<HolderLookup.Provider> registriesFuture = CompletableFuture.supplyAsync(() -> FabricDataGenHelperAccessor.invokeCreateHolderLookupProvider(fabricEntrypoints), Util.backgroundExecutor());
+
+        Object2IntOpenHashMap<String> jsonKeySortOrders = (Object2IntOpenHashMap<String>) DataProvider.FIXED_ORDER_FIELDS;
+        Object2IntOpenHashMap<String> defaultJsonKeySortOrders = new Object2IntOpenHashMap<>(jsonKeySortOrders);
+
+        for (EntrypointContainer<RuntimeDatagenEntrypoint> entrypointContainer : containers) {
+            RuntimeDatagenEntrypoint entrypoint = entrypointContainer.getEntrypoint();
+
+            String modid = MoreObjects.firstNonNull(entrypoint.getEffectiveModId(), entrypointContainer.getProvider().getMetadata().getId());
+            Path outputPath = ROOT_PATH.resolve(modid);
+
+            String entrypointName = getEntrypointName(entrypoint, modid);
+
+            TrUtils.LOGGER.info("Starting runtime datagen for {}", entrypointName);
+
+            try {
+                ModContainer mod = FabricLoader.getInstance().getModContainer(modid).orElseThrow(() -> new RuntimeException("Failed to find mod container for mod id %s".formatted(modid)));
+
+                HashSet<String> keys = new HashSet<>();
+                entrypoint.addJsonKeySortOrders((key, value) -> {
+                    Objects.requireNonNull(key, "Tried to register a priority for a null key");
+                    jsonKeySortOrders.put(key, value);
+                    keys.add(key);
+                });
+
+                FabricDataGenerator generator = new FabricDataGenerator(outputPath, mod, entrypoint.strictValidation(), registriesFuture);
+                entrypoint.onInitializeDataGenerator(generator);
+                generator.run();
+
+                finishedMods.put(mod, entrypoint);
+                generatedPacks.put(mod, GeneratedPackResourcesPair.create(mod, entrypoint));
+
+                jsonKeySortOrders.keySet().removeAll(keys);
+                jsonKeySortOrders.putAll(defaultJsonKeySortOrders);
+            }
+            catch (Exception e) {
+                throw new RuntimeDatagenException(String.format("Failed to run data generator from mod %s", modid), e);
+            }
+
+            TrUtils.LOGGER.info("Finished runtime datagen for {}", entrypointName);
+        }
     }
 
     private static String getEntrypointName(RuntimeDatagenEntrypoint entrypoint, String modid) {
         Identifier id = entrypoint.getId();
         if (id != null) {
             return id.toString();
-        }
-        else {
+        } else {
             return modid;
         }
-    }
-
-    @SuppressWarnings("UnstableApiUsage")
-    public static void run(RuntimeDatagenEntrypoint entrypoint, String modid) {
-        modid = MoreObjects.firstNonNull(entrypoint.getEffectiveModId(), modid);
-        Path outputPath = ROOT_PATH.resolve(modid);
-
-        String entrypointName = getEntrypointName(entrypoint, modid);
-
-        TrUtils.LOGGER.info("Starting runtime datagen for {}", entrypointName);
-        try {
-            ModContainer mod = FabricLoader.getInstance().getModContainer(modid).orElseThrow();
-            CompletableFuture<HolderLookup.Provider> registriesFuture = CompletableFuture.supplyAsync(() -> FabricDataGenHelperAccessor.invokeCreateHolderLookupProvider(List.of(entrypoint)), Util.backgroundExecutor());
-            FabricDataGenerator generator = new FabricDataGenerator(outputPath, mod, entrypoint.strictValidation(), registriesFuture);
-            entrypoint.onInitializeDataGenerator(generator);
-            generator.run();
-            finishedMods.put(mod, entrypoint);
-            generatedPacks.put(mod, GeneratedPackResourcesPair.create(mod, entrypoint));
-        }
-        catch (Exception e) {
-            throw new RuntimeDatagenException(String.format("Runtime datagen failed for %s!", modid), e);
-        }
-        TrUtils.LOGGER.info("Finished runtime datagen for {}", entrypointName);
     }
 
     public static List<PackResources> injectAllPacks(List<PackResources> packs, PackType type) {

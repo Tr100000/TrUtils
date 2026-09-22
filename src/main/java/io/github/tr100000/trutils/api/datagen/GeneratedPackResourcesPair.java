@@ -3,10 +3,12 @@ package io.github.tr100000.trutils.api.datagen;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
+import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.Nullable;
 
 import java.util.Objects;
 
+@ApiStatus.Internal
 public class GeneratedPackResourcesPair {
     private @Nullable GeneratedPackResources clientPack;
     private @Nullable GeneratedPackResources serverPack;

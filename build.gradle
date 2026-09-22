@@ -30,8 +30,6 @@ dependencies {
     compileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
 
-apply from: "https://raw.githubusercontent.com/Tr100000/modding-utils/main/scripts/devlogin.gradle"
-
 loom.splitEnvironmentSourceSets()
 
 sourceSets {
@@ -61,11 +59,9 @@ loom {
     runs {
         testmod {
             client()
-            name = "Testmod Client"
+            displayName = "Testmod Client"
             source = sourceSets.testmod
-            ideConfigGenerated = true
-            programArgs "--launch_target", "net.fabricmc.loader.impl.launch.knot.KnotClient"
-            mainClass.set "net.covers1624.devlogin.DevLogin"
+            generateRunConfig = true
         }
     }
 }
